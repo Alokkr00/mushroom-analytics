@@ -1,15 +1,12 @@
 customer_id,customer_name,customer_segment,delivery_route_zone,payment_terms_days,preferred_variety_id,acquisition_date,is_active,total_completed_orders,lifetime_net_revenue,lifetime_fulfilled_kg,average_order_value,is_repeat_customer,customer_tenure_days
-CUS-008,The Good Pantry,Boutique Grocer,Zone C,30,MSH-02,2024-05-09,True,6,463.81,24.306,77.3,True,115
 CUS-001,Sage & Ember Restaurant,Restaurant,Zone A,14,MSH-02,2024-06-10,True,3,261.11,17.085,87.04,True,14
 CUS-002,The Umami Kitchen,Restaurant,Zone A,14,MSH-01,2024-05-08,True,4,1118.59,54.077,279.65,True,118
 CUS-007,Wild Earth Market,Boutique Grocer,Zone B,14,MSH-03,2024-05-15,True,1,13.04,0.815,13.04,False,0
-CUS-004,Harvest Table Co-op,Restaurant,Zone C,7,MSH-01,2024-06-17,True,5,737.47,37.138,147.49,True,155
-CUS-006,Verdant Greens Grocery,Boutique Grocer,Zone A,14,MSH-01,2024-05-16,True,1,96.28,3.566,96.28,False,0
-CUS-011,Weekend Community Market,Farmers Market,Zone C,0,MSH-01,2024-06-13,True,3,69.26,2.945,23.09,True,18
 CUS-018,Anchor & Grain Diner,Restaurant,Zone B,14,MSH-03,2024-05-03,True,7,811.7,39.19,115.96,True,156
 CUS-019,Terra Firma Wellness,Boutique Grocer,Zone C,30,MSH-01,2024-05-02,True,6,840.39,39.814,140.07,True,126
 CUS-015,Priya Wellness Kitchen,Direct Consumer,Zone A,0,MSH-01,2024-05-06,True,4,81.05,3.937,20.26,True,84
 CUS-017,Bloom & Root Cafe,Restaurant,Zone A,14,MSH-02,2024-05-28,True,5,589.7,32.554,117.94,True,110
+CUS-008,The Good Pantry,Boutique Grocer,Zone C,30,MSH-02,2024-05-09,True,6,463.81,24.306,77.3,True,115
 CUS-014,Marcus D'Souza,Direct Consumer,Zone B,0,MSH-03,2024-06-04,True,2,54.47,2.745,27.24,True,44
 CUS-005,Green Plate Farm Kitchen,Restaurant,Zone A,30,MSH-02,2024-05-18,True,7,1116.54,50.191,159.51,True,88
 CUS-010,Sunrise Farmers Market Stall,Farmers Market,Zone A,0,MSH-01,2024-05-07,True,6,168.78,7.353,28.13,True,92
@@ -17,5 +14,8 @@ CUS-009,Natural Roots Health Store,Boutique Grocer,Zone B,14,MSH-01,2024-06-17,T
 CUS-003,Fernwood Bistro,Restaurant,Zone B,7,MSH-03,2024-05-02,True,4,372.57,20.373,93.14,True,128
 CUS-016,Cloudforest Soup Co.,Restaurant,Zone C,7,MSH-01,2024-06-07,True,3,369.39,17.501,123.13,True,24
 CUS-013,Elena's Home Kitchen,Direct Consumer,Zone A,0,MSH-02,2024-06-27,True,2,71.39,2.644,35.7,True,16
+CUS-004,Harvest Table Co-op,Restaurant,Zone C,7,MSH-01,2024-06-17,True,5,737.47,37.138,147.49,True,155
+CUS-006,Verdant Greens Grocery,Boutique Grocer,Zone A,14,MSH-01,2024-05-16,True,1,96.28,3.566,96.28,False,0
+CUS-011,Weekend Community Market,Farmers Market,Zone C,0,MSH-01,2024-06-13,True,3,69.26,2.945,23.09,True,18
 CUS-012,Ramen & Roots Noodle Bar,Restaurant,Zone B,14,MSH-01,2024-06-17,True,0,0.0,0.0,0.0,False,0
 CUS-020,Sunday Table Market,Farmers Market,Zone A,0,MSH-01,2024-05-06,True,0,0.0,0.0,0.0,False,0

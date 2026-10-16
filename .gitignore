@@ -45,6 +45,8 @@ htmlcov/
 dbt_project/target/
 dbt_project/dbt_packages/
 dbt_project/logs/
+logs/
+data/audit_logs/
 
 # Large Generated Datasets (keep sample templates in git, ignore mass exports)
 data/generated/*.parquet
