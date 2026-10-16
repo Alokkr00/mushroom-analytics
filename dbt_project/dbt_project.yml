@@ -23,6 +23,13 @@ models:
     intermediate:
       +materialized: view
       +schema: intermediate
+    dimensions:
+      +materialized: table
+      +schema: analytics
+    facts:
+      +materialized: table
+      +schema: analytics
     marts:
       +materialized: table
       +schema: analytics
+

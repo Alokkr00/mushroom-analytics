@@ -1,0 +1,99 @@
+version: 2
+
+models:
+  - name: fact_production_batches
+    description: "Cultivation batch fact table tracking biological efficiency, cycles, yields, and direct costs."
+    columns:
+      - name: batch_id
+        description: "Primary key batch identifier."
+        tests:
+          - unique
+          - not_null
+      - name: mushroom_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_mushroom')
+              field: mushroom_id
+      - name: location_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_location')
+              field: location_id
+
+  - name: fact_harvest
+    description: "Individual harvest flushes tracking gross yield, accepted weight, and rejections."
+    columns:
+      - name: harvest_id
+        tests:
+          - unique
+          - not_null
+      - name: batch_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('fact_production_batches')
+              field: batch_id
+
+  - name: fact_sales
+    description: "Sales order line grain fact table tracking fulfillment, recognized revenue, COGS, and gross margin."
+    columns:
+      - name: order_line_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_id
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_id
+      - name: mushroom_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_mushroom')
+              field: mushroom_id
+
+  - name: fact_expenses
+    description: "Operating expense transactions for overhead, labor, and utility analysis."
+    columns:
+      - name: expense_id
+        tests:
+          - unique
+          - not_null
+      - name: category_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_expense_category')
+              field: category_id
+
+  - name: fact_procurement
+    description: "Purchases of raw materials, spawn, substrate, and packaging supplies."
+    columns:
+      - name: purchase_id
+        tests:
+          - unique
+          - not_null
+      - name: supplier_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_supplier')
+              field: supplier_id
+
+  - name: fact_inventory_movements
+    description: "Inventory audit log tracking pack-in receipts, sales dispatches, and shrinkage."
+    columns:
+      - name: movement_id
+        tests:
+          - unique
+          - not_null

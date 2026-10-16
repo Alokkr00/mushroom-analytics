@@ -1,0 +1,82 @@
+version: 2
+
+models:
+  - name: dim_customer
+    description: "Customer dimensional model enriched with lifetime RFM aggregations, tenure, and repeat status."
+    columns:
+      - name: customer_id
+        description: "Primary key for customer dimension."
+        tests:
+          - unique
+          - not_null
+      - name: customer_segment
+        description: "Customer classification: Restaurant, Wholesale, Supermarket, Farmer Market, Direct Retail."
+        tests:
+          - not_null
+      - name: is_active
+        tests:
+          - not_null
+
+  - name: dim_mushroom
+    description: "Mushroom variety reference dimension with biological lifecycle parameters."
+    columns:
+      - name: mushroom_id
+        description: "Primary key for mushroom variety."
+        tests:
+          - unique
+          - not_null
+      - name: mushroom_common_name
+        tests:
+          - not_null
+
+  - name: dim_product
+    description: "Product catalog dimension with SKU packaging format, unit weight, and standard price."
+    columns:
+      - name: product_id
+        description: "Primary key for product dimension."
+        tests:
+          - unique
+          - not_null
+      - name: sku_code
+        tests:
+          - unique
+          - not_null
+      - name: mushroom_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_mushroom')
+              field: mushroom_id
+
+  - name: dim_date
+    description: "Standard calendar date dimension covering historical and operational timeframe."
+    columns:
+      - name: date_key
+        description: "Primary key date."
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_supplier
+    description: "Supplier dimension with reliability rating and contact details."
+    columns:
+      - name: supplier_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_expense_category
+    description: "Expense classification categories for operating cost allocation."
+    columns:
+      - name: category_id
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_location
+    description: "Growing rooms, incubation chambers, and storage facilities."
+    columns:
+      - name: location_id
+        tests:
+          - unique
+          - not_null

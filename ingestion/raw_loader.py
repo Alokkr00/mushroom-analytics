@@ -165,8 +165,12 @@ class RawIngestionEngine:
                             if cleaned:
                                 try:
                                     self.conn.execute(cleaned)
-                                except Exception:
-                                    pass
+                                except Exception as exc:
+                                    err_str = str(exc).lower()
+                                    if "comment on" in cleaned.lower() or "already exists" in err_str:
+                                        continue
+                                    console.print(f"[bold red]Critical DDL Execution Error in {ddl_path.name}: {exc}[/bold red]")
+                                    raise RuntimeError(f"DDL execution failed in {ddl_path.name} on statement:\n{cleaned}\nError: {exc}") from exc
         elif self.target == "postgres":
             import psycopg2
             self.conn = psycopg2.connect(
@@ -286,15 +290,25 @@ class RawIngestionEngine:
                     error_details=f"Duplicate primary key '{bad_row[pk_col]}' detected in source file."
                 )
 
-        # 4. Ingestion strategy based on mode (Full vs Incremental)
+        # 4. Ingestion strategy based on mode (Full vs Incremental) with atomic transaction safety
         inserted_count = 0
         if self.target == "duckdb":
             if self.mode == "full":
-                self.conn.execute(f"DELETE FROM {raw_table};")
-                self.conn.register("df_view", df)
-                self.conn.execute(f"INSERT INTO {raw_table} SELECT * FROM df_view;")
-                self.conn.unregister("df_view")
-                inserted_count = extracted_count
+                self.conn.execute("BEGIN TRANSACTION;")
+                try:
+                    self.conn.execute(f"DELETE FROM {raw_table};")
+                    self.conn.register("df_view", df)
+                    self.conn.execute(f"INSERT INTO {raw_table} SELECT * FROM df_view;")
+                    self.conn.unregister("df_view")
+                    self.conn.execute("COMMIT;")
+                    inserted_count = extracted_count
+                except Exception as e:
+                    self.conn.execute("ROLLBACK;")
+                    try:
+                        self.conn.unregister("df_view")
+                    except Exception:
+                        pass
+                    raise RuntimeError(f"Atomic full load failed for {raw_table}: {e}") from e
             elif self.mode == "incremental":
                 # Only insert rows whose _row_fingerprint does not already exist
                 existing_hashes = set(
@@ -302,19 +316,29 @@ class RawIngestionEngine:
                 )
                 new_df = df[~df["_row_fingerprint"].isin(existing_hashes)]
                 if len(new_df) > 0:
-                    self.conn.register("new_df_view", new_df)
-                    self.conn.execute(f"INSERT INTO {raw_table} SELECT * FROM new_df_view;")
-                    self.conn.unregister("new_df_view")
+                    self.conn.execute("BEGIN TRANSACTION;")
+                    try:
+                        self.conn.register("new_df_view", new_df)
+                        self.conn.execute(f"INSERT INTO {raw_table} SELECT * FROM new_df_view;")
+                        self.conn.unregister("new_df_view")
+                        self.conn.execute("COMMIT;")
+                    except Exception as e:
+                        self.conn.execute("ROLLBACK;")
+                        try:
+                            self.conn.unregister("new_df_view")
+                        except Exception:
+                            pass
+                        raise RuntimeError(f"Atomic incremental insert failed for {raw_table}: {e}") from e
                 inserted_count = len(new_df)
         elif self.target == "postgres":
-            from sqlalchemy import create_engine
+            from sqlalchemy import create_engine, text
             db_url = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
             engine = create_engine(db_url)
             schema_name, table_name = raw_table.split(".")
             if self.mode == "full":
                 with engine.begin() as connection:
-                    connection.execute(f"TRUNCATE TABLE {raw_table};")
-                df.to_sql(table_name, engine, schema=schema_name, if_exists="append", index=False)
+                    connection.execute(text(f"TRUNCATE TABLE {raw_table};"))
+                    df.to_sql(table_name, con=connection, schema=schema_name, if_exists="append", index=False)
                 inserted_count = extracted_count
             elif self.mode == "incremental":
                 with engine.connect() as connection:
@@ -322,7 +346,8 @@ class RawIngestionEngine:
                 existing_hashes = set(existing_df["_row_fingerprint"])
                 new_df = df[~df["_row_fingerprint"].isin(existing_hashes)]
                 if len(new_df) > 0:
-                    new_df.to_sql(table_name, engine, schema=schema_name, if_exists="append", index=False)
+                    with engine.begin() as connection:
+                        new_df.to_sql(table_name, con=connection, schema=schema_name, if_exists="append", index=False)
                 inserted_count = len(new_df)
 
         self.rows_inserted += inserted_count
