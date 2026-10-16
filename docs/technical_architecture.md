@@ -2,7 +2,7 @@
 
 **Document Version:** 1.0.0  
 **Project:** FungiFlow Organics Analytics Warehouse  
-**Author:** Freelance Data Analyst & Analytics Engineering Consultant  
+**Author:** Alok Kumar (Freelance Data Analyst & Analytics Engineering Consultant)  
 **Classification:** Engineering Specification  
 
 ---

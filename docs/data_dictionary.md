@@ -2,7 +2,7 @@
 
 **Document Version:** 2.0.0  
 **Project:** FungiFlow Organics Analytics Warehouse  
-**Author:** Freelance Data Analyst & Analytics Engineering Consultant  
+**Author:** Alok Kumar (Freelance Data Analyst & Analytics Engineering Consultant)  
 **Classification:** Operational Data Dictionary Standard  
 
 ---

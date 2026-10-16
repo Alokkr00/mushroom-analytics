@@ -5,7 +5,7 @@
 [![dbt Core 1.12](https://img.shields.io/badge/dbt-Core_1.12-FF694B?style=for-the-badge&logo=dbt&logoColor=white)](https://www.getdbt.com/)
 [![Power BI](https://img.shields.io/badge/Power_BI-Desktop-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)](https://powerbi.microsoft.com/)
 [![Pytest 87 Tests](https://img.shields.io/badge/Tests-87_dbt_+_10_Pytest-2EA44F?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org/)
-[![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/features/actions)
+[![CI/CD Pipeline](https://github.com/Alokkr00/mushroom-analytics/actions/workflows/data_pipeline.yml/badge.svg)](https://github.com/Alokkr00/mushroom-analytics/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 > **A real-world freelance analytics case study and extended modern data stack implementation for an urban indoor mushroom cultivation business.**  
@@ -280,7 +280,21 @@ Mushroom Analytics/
 
 ## 8. Author & Portfolio Verification
 
-- **Author / Consultant:** Freelance Data Analyst & Analytics Engineering Consultant
-- **Project Repository:** [https://github.com/Alokkr00/mushroom-analytics](https://github.com/Alokkr00/mushroom-analytics)
-- **Live Verification Status:** All 38 models compiled, 87 tests passing, 10/10 pytest suite passing, $0.00 / 0.000 kg reconciliation confirmed.
-- **License:** Open-source under the [MIT License](LICENSE).
+- **Author / Lead Analytics Consultant:** **Alok Kumar**  
+  - **Role:** Freelance Data Analyst & Analytics Engineering Consultant  
+  - **GitHub Profile:** [@Alokkr00](https://github.com/Alokkr00)  
+  - **Project Repository:** [https://github.com/Alokkr00/mushroom-analytics](https://github.com/Alokkr00/mushroom-analytics)  
+- **Live CI/CD Pipeline & Quality Gate:** [![CI/CD Pipeline](https://github.com/Alokkr00/mushroom-analytics/actions/workflows/data_pipeline.yml/badge.svg)](https://github.com/Alokkr00/mushroom-analytics/actions)  
+  - **Live Workflow Runs:** Automated end-to-end testing and transformation on GitHub Actions ([View Live Actions Runs](https://github.com/Alokkr00/mushroom-analytics/actions))  
+  - **dbt Transformation Models:** 38/38 models compiled and materialized (15 staging views, 5 intermediate views, 7 dimensions, 6 facts, 5 reporting marts).  
+  - **Automated Data Quality Tests:** 87/87 dbt assertions passing (`PASS=87 WARN=0 ERROR=0`).  
+  - **Pytest Suite:** 10/10 tests passing (5 unit tests, 5 integration tests in 12.2s).  
+  - **Multi-Tier Financial Reconciliation:** Zero discrepancies confirmed:  
+    - **Recognized Revenue:** $7,913.10 across Raw, Fact, and Mart tiers (**$0.00 variance**).  
+    - **Operating Expenses (OPEX):** $12,437.78 across Raw, Fact, and Mart tiers (**$0.00 variance**).  
+    - **Harvest Mass Balance:** 706.157 kg accepted harvest across Raw, Fact, and Mart tiers (**0.000 kg variance**).  
+- **Live Datasets & Staged Warehouse Files:**  
+  - **Embedded Vectorized Warehouse:** [`data/warehouse.duckdb`](data/warehouse.duckdb) (DuckDB 1.1+ columnar store).  
+  - **Power BI Semantic Staging Data:** [`powerbi/data/`](powerbi/data/) (18 conformed CSV tables with schema and row hashes tracked in [`tables_manifest.json`](powerbi/data/tables_manifest.json)).  
+  - **Generated Operational CSVs:** [`data/generated/`](data/generated/) (15 deterministic operational tables calibrated to biological growth curves).  
+- **License:** Open-source under the [MIT License](LICENSE) (Copyright © 2024-2026 Alok Kumar).
