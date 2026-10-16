@@ -122,7 +122,7 @@ flowchart TD
 - **87 Automated dbt Tests**: 100% pass rate covering primary key uniqueness, foreign key relationships, not-null constraints, and custom SQL assertions.
 
 ### B. Multi-Tier Zero-Variance Reconciliation
-- Automated SQL check ([`sql/reconciliation/financial_reconciliation.sql`](file:///d:/Mushroom%20Analytics/sql/reconciliation/financial_reconciliation.sql)) executes across raw, staging, intermediate, fact, and mart tiers.
+- Automated SQL check ([`sql/reconciliation/financial_reconciliation.sql`](sql/reconciliation/financial_reconciliation.sql)) executes across raw, staging, intermediate, fact, and mart tiers.
 - Proves **$0.00 financial variance** across recognized revenue ($7,913.10) and OPEX ($12,437.78), and **0.000 kg variance** across accepted harvest yields (706.157 kg).
 
 ### C. Rigorous Statistical Hypothesis Testing (SciPy & Editorial Figures)
@@ -132,21 +132,21 @@ flowchart TD
 - **6 Senior Editorial Figures**: Styled with direct data labeling, high-contrast focus palettes, takeaway headlines, and zero default chartjunk.
 
 ### D. Power BI Semantic Model & Production DAX Library
-- 18 warehouse tables staged in [`powerbi/data/`](file:///d:/Mushroom%20Analytics/powerbi/data) with schema tracking in `tables_manifest.json`.
-- 30+ production DAX measures ([`powerbi/dax_measures.dax`](file:///d:/Mushroom%20Analytics/powerbi/dax_measures.dax)) including Time Intelligence (MTD, YTD, YoY), Biological Efficiency, OTIF Fulfillment Rate, and Dynamic Pareto 80/20 Customer Tiers.
-- Visual wireframes and layouts for 4 interactive reporting pages in [`docs/powerbi_dashboard_specification.md`](file:///d:/Mushroom%20Analytics/docs/powerbi_dashboard_specification.md).
+- 18 warehouse tables staged in [`powerbi/data/`](powerbi/data/) with schema tracking in `tables_manifest.json`.
+- 30+ production DAX measures ([`powerbi/dax_measures.dax`](powerbi/dax_measures.dax)) including Time Intelligence (MTD, YTD, YoY), Biological Efficiency, OTIF Fulfillment Rate, and Dynamic Pareto 80/20 Customer Tiers.
+- Visual wireframes and layouts for 4 interactive reporting pages in [`docs/powerbi_dashboard_specification.md`](docs/powerbi_dashboard_specification.md).
 
 ### E. Eight Strategic Business Case Studies
-- Dedicated analytical folders in [`case_studies/01_*`](file:///d:/Mushroom%20Analytics/case_studies) through `08_*`, each containing:
+- Dedicated analytical folders in [`case_studies/`](case_studies/) (Case 01 through 08), each containing:
   - Executive problem statement, root-cause analysis, and financial trade-off models.
   - Reproducible standalone SQL query (`query.sql`).
-  - Consolidated Executive Decision Matrix & 90-Day Execution Roadmap ([`docs/executive_decision_matrix.md`](file:///d:/Mushroom%20Analytics/docs/executive_decision_matrix.md)) delivering **+$10,657.40/yr net upside**.
+  - Consolidated Executive Decision Matrix & 90-Day Execution Roadmap ([`docs/executive_decision_matrix.md`](docs/executive_decision_matrix.md)) delivering **+$10,657.40/yr net upside**.
 
 ### F. Master Pipeline Orchestration & GitHub Actions CI/CD
-- Modular master CLI ([`scripts/run_pipeline.py`](file:///d:/Mushroom%20Analytics/scripts/run_pipeline.py)) coordinating generation, ingestion, dbt models, dbt tests, reconciliation, Power BI staging, and statistical figures.
-- Multi-channel notification engine ([`orchestration/alerting.py`](file:///d:/Mushroom%20Analytics/orchestration/alerting.py)) supporting Slack Block Kit, MS Teams Adaptive Cards v1.4, and local JSON audit trails.
-- GitHub Actions CI/CD Quality Gate ([`.github/workflows/data_pipeline.yml`](file:///d:/Mushroom%20Analytics/.github/workflows/data_pipeline.yml)) enforcing clean unit and integration tests on every pull request.
-- Operations Runbook ([`docs/runbook.md`](file:///d:/Mushroom%20Analytics/docs/runbook.md)) with 5 step-by-step incident response playbooks.
+- Modular master CLI ([`scripts/run_pipeline.py`](scripts/run_pipeline.py)) coordinating generation, ingestion, dbt models, dbt tests, reconciliation, Power BI staging, and statistical figures.
+- Multi-channel notification engine ([`orchestration/alerting.py`](orchestration/alerting.py)) supporting Slack Block Kit, MS Teams Adaptive Cards v1.4, and local JSON audit trails.
+- GitHub Actions CI/CD Quality Gate ([`.github/workflows/data_pipeline.yml`](.github/workflows/data_pipeline.yml)) enforcing clean unit and integration tests on every pull request.
+- Operations Runbook ([`docs/runbook.md`](docs/runbook.md)) with 5 step-by-step incident response playbooks.
 
 ---
 
@@ -154,8 +154,8 @@ flowchart TD
 
 ### 1. Clone & Set Up Virtual Environment
 ```powershell
-git clone https://github.com/fungiflow/mycometrics.git
-cd "d:\Mushroom Analytics"
+git clone https://github.com/Alokkr00/mushroom-analytics.git
+cd mushroom-analytics
 
 # Create and activate Python virtual environment
 python -m venv .venv
@@ -281,6 +281,6 @@ Mushroom Analytics/
 ## 8. Author & Portfolio Verification
 
 - **Author / Consultant:** Freelance Data Analyst & Analytics Engineering Consultant
-- **Project Repository:** [`https://github.com/fungiflow/mycometrics`](file:///d:/Mushroom%20Analytics)
+- **Project Repository:** [https://github.com/Alokkr00/mushroom-analytics](https://github.com/Alokkr00/mushroom-analytics)
 - **Live Verification Status:** All 38 models compiled, 87 tests passing, 10/10 pytest suite passing, $0.00 / 0.000 kg reconciliation confirmed.
-- **License:** Open-source under the [MIT License](file:///d:/Mushroom%20Analytics/LICENSE).
+- **License:** Open-source under the [MIT License](LICENSE).
