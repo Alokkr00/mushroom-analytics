@@ -1,317 +1,403 @@
-# Data Dictionary & Schema Specifications: MycoMetrics
+# MycoMetrics Consolidated Enterprise Data Dictionary
 
-This document defines the complete data dictionary for all operational and generated source tables utilized in the MycoMetrics platform.
-
-Every dataset preserves an explicit lineage indicator (`source_type`) to distinguish real operational records (`'actual_source'`), synthetic simulation data (`'synthetic_demo'`), and controlled test anomalies (`'synthetic_demo_DQ_TEST'`).
-
----
-
-## 1. Reference & Dimension Source Tables
-
-### 1.1 `mushroom_varieties.csv`
-- **Grain**: 1 row per biological mushroom species.
-- **Primary Key**: `mushroom_id` (`VARCHAR(10)`)
-
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `mushroom_id` | String | `VARCHAR(10)` | NO | Unique biological variety code (e.g. MSH-01). | ID | `MSH-01` |
-| `common_name` | String | `VARCHAR(50)` | NO | Commercial common trade name. | Text | `Pearl Oyster` |
-| `scientific_name` | String | `VARCHAR(100)` | NO | Binomial botanical taxonomy. | Text | `Pleurotus ostreatus` |
-| `substrate_formula` | String | `VARCHAR(150)` | NO | Standard raw substrate recipe. | Text | `Pasteurized Wheat Straw + 10% Wheat Bran` |
-| `incubation_days_min` | Integer | `INTEGER` | NO | Minimum expected colonization days. | Days | `18` |
-| `incubation_days_max` | Integer | `INTEGER` | NO | Maximum expected colonization days. | Days | `22` |
-| `be_min` | Float | `NUMERIC(4,2)` | NO | Minimum biological efficiency ratio. | Decimal | `0.75` |
-| `be_max` | Float | `NUMERIC(4,2)` | NO | Maximum biological efficiency ratio. | Decimal | `1.10` |
-| `shelf_life_days` | Integer | `INTEGER` | NO | Post-harvest usable cold-storage shelf life. | Days | `5` |
-| `source_type` | String | `VARCHAR(30)` | NO | Data provenance tag. | Enum | `synthetic_demo` |
-| `created_at` | Timestamp | `TIMESTAMP WITH TIME ZONE` | NO | ISO 8601 record generation timestamp. | UTC | `2024-05-01T00:00:00Z` |
+**Document Version:** 2.0.0  
+**Project:** FungiFlow Organics Analytics Warehouse  
+**Author:** Lead Analytics Engineer & Data Governance Architect  
+**Classification:** Enterprise Data Governance Standard  
 
 ---
 
-### 1.2 `products.csv`
-- **Grain**: 1 row per finished goods sellable SKU.
-- **Primary Key**: `product_id` (`VARCHAR(10)`)
-- **Foreign Key**: `mushroom_id` -> `mushroom_varieties.mushroom_id`
+## 1. Schema Organization & Architectural Tiers
 
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `product_id` | String | `VARCHAR(10)` | NO | Unique finished product SKU identifier. | ID | `PRD-001` |
-| `mushroom_id` | String | `VARCHAR(10)` | NO | FK referencing `mushroom_varieties`. | FK | `MSH-01` |
-| `sku_code` | String | `VARCHAR(30)` | NO | Human-readable SKU code. | Text | `MSH-01-WHL-01KG` |
-| `product_name` | String | `VARCHAR(100)` | NO | Full commercial product title. | Text | `Pearl Oyster Bulk Wholesale Crate 1 kg` |
-| `package_format` | String | `VARCHAR(40)` | NO | Container format: Bulk Crate, Clamshell, etc. | Text | `Bulk Crate` |
-| `unit_weight_kg` | Float | `NUMERIC(6,3)` | NO | Net fresh weight in kilograms per unit pack. | kg | `1.000` |
-| `grade` | String | `VARCHAR(20)` | NO | Quality classification (`Grade A`, `Grade B`). | Text | `Grade A` |
-| `standard_selling_price` | Float | `NUMERIC(10,2)` | NO | Standard wholesale/retail list price. | USD ($) | `16.00` |
-| `active_status` | Boolean | `BOOLEAN` | NO | Flag indicating SKU is currently available. | Bool | `true` |
-| `source_type` | String | `VARCHAR(30)` | NO | Data provenance tag. | Enum | `synthetic_demo` |
-| `created_at` | Timestamp | `TIMESTAMP WITH TIME ZONE` | NO | Record creation timestamp. | UTC | `2024-05-01T00:00:00Z` |
+The MycoMetrics Data Warehouse is structured across five distinct schema tiers in a Medallion pattern:
 
----
+```
+[Operational CSVs] ──► [raw] (Bronze) ──► [analytics_staging] (Silver)
+                                                    │
+                                                    ▼
+                                       [analytics_intermediate] (Silver+)
+                                                    │
+                                                    ▼
+                                       [analytics_analytics] (Gold / Marts)
+                                       ├── 7 Conformed Dimensions (dim_*)
+                                       ├── 6 Operational Facts (fact_*)
+                                       └── 5 Analytical Marts (mart_*)
+```
 
-### 1.3 `customers.csv`
-- **Grain**: 1 row per customer account.
-- **Primary Key**: `customer_id` (`VARCHAR(10)`)
-
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `customer_id` | String | `VARCHAR(10)` | NO | Unique customer account number. | ID | `CUS-001` |
-| `customer_name` | String | `VARCHAR(100)` | NO | Commercial name or anonymized moniker. | Text | `Sage & Ember Restaurant` |
-| `customer_segment` | String | `VARCHAR(30)` | NO | Segment: Restaurant, Boutique Grocer, Market, D2C. | Text | `Restaurant` |
-| `delivery_route_zone` | String | `VARCHAR(20)` | NO | Logistical delivery cluster (Zone A, B, C). | Text | `Zone A` |
-| `payment_terms_days` | Integer | `INTEGER` | NO | Net credit payment window in days. | Days | `14` |
-| `acquisition_date` | Date | `DATE` | NO | Date customer placed first order or registered. | YYYY-MM-DD | `2024-05-05` |
-| `is_active` | Boolean | `BOOLEAN` | NO | Account active status flag. | Bool | `true` |
-| `source_type` | String | `VARCHAR(30)` | NO | Data provenance tag. | Enum | `synthetic_demo` |
+- **`raw`**: Immutable raw ingestion tier preserving source fidelity, stamped with technical metadata.
+- **`analytics_staging`**: Cleansed, typed, normalized 1-to-1 representations of raw source tables.
+- **`analytics_intermediate`**: Business-logic joins, yield aggregations, and financial reconciliations.
+- **`analytics_analytics`**: Kimball star schema containing conformed dimensions, transactional facts, and reporting marts.
+- **`audit`**: Pipeline operational logs, run timestamps, row watermarks, and data quality issue exceptions.
 
 ---
 
-### 1.4 `suppliers.csv`
-- **Grain**: 1 row per vendor.
-- **Primary Key**: `supplier_id` (`VARCHAR(10)`)
+## 2. Conformed Dimensional Model (`analytics_analytics.dim_*`)
 
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `supplier_id` | String | `VARCHAR(10)` | NO | Unique vendor identifier. | ID | `SUP-01` |
-| `name` | String | `VARCHAR(100)` | NO | Vendor trading name. | Text | `MycoSpawn Labs` |
-| `category` | String | `VARCHAR(50)` | NO | Primary supply category (Spawn, Substrate, Rent). | Text | `Grain Spawn` |
-| `lead_days_min` | Integer | `INTEGER` | NO | Minimum historical delivery lead time. | Days | `3` |
-| `lead_days_max` | Integer | `INTEGER` | NO | Maximum historical delivery lead time. | Days | `6` |
-| `payment_terms` | Integer | `INTEGER` | NO | Standard credit terms in days. | Days | `30` |
+All dimensions are modeled under **Slowly Changing Dimension (SCD) Type 1** (overwrite on change) given current early-stage operational scope.
 
 ---
 
-### 1.5 `locations.csv`
-- **Grain**: 1 row per physical room or zone within the facility.
-- **Primary Key**: `location_id` (`VARCHAR(10)`)
+### 2.1 `dim_date`
+- **Schema:** `analytics_analytics`
+- **Granularity:** 1 row per calendar day.
+- **Primary Key:** `date_key` (`INTEGER`)
+- **Row Count:** 214 rows (spanning 2024-05-01 to 2024-11-30).
+- **Business Purpose:** Central conformed calendar dimension for time intelligence, trend analysis, and cohort aggregation.
 
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `location_id` | String | `VARCHAR(10)` | NO | Unique zone code. | ID | `LOC-01` |
-| `name` | String | `VARCHAR(50)` | NO | Descriptive room name. | Text | `Grow Room A` |
-| `capacity_blocks` | Integer | `INTEGER` | NO | Maximum block capacity on shelving racks. | Count | `200` |
-| `temp_controlled` | Boolean | `BOOLEAN` | NO | Indicates HVAC / environmental cooling. | Bool | `true` |
-
----
-
-### 1.6 `expense_categories.csv`
-- **Grain**: 1 row per financial expense classification.
-- **Primary Key**: `category_id` (`VARCHAR(10)`)
-
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `category_id` | String | `VARCHAR(10)` | NO | Unique expense classification code. | ID | `EXP-01` |
-| `name` | String | `VARCHAR(60)` | NO | Descriptive category title. | Text | `Grain Spawn Purchase` |
-| `behavior` | String | `VARCHAR(30)` | NO | Direct Production, Variable Operating, Fixed Overhead. | Enum | `Direct Production` |
-| `fs_section` | String | `VARCHAR(30)` | NO | Financial statement category: COGS or Operating Expense. | Enum | `COGS` |
+| Column Name | Data Type | Nullable | PK / FK | Description & Business Definition | Example Value |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| `date_key` | `INTEGER` | NO | PK | Integer surrogate key in `YYYYMMDD` format. | `20240501` |
+| `calendar_date` | `DATE` | NO | - | Gregorian calendar date (`YYYY-MM-DD`). | `2024-05-01` |
+| `day_of_month` | `INTEGER` | NO | - | Numeric day of the month (1–31). | `1` |
+| `day_of_week_num` | `INTEGER` | NO | - | ISO day of week index (1 = Monday, 7 = Sunday). | `3` |
+| `day_of_week_name`| `VARCHAR(15)` | NO | - | Full English day name. | `Wednesday` |
+| `is_weekend` | `BOOLEAN` | NO | - | Boolean flag: true if Saturday or Sunday. | `false` |
+| `week_of_year` | `INTEGER` | NO | - | ISO calendar week number (1–53). | `18` |
+| `month_number` | `INTEGER` | NO | - | Calendar month integer (1–12). | `5` |
+| `month_name` | `VARCHAR(15)` | NO | - | Full English month name. | `May` |
+| `year_month` | `VARCHAR(7)` | NO | - | Reporting standard monthly period string (`YYYY-MM`). | `2024-05` |
+| `quarter_number` | `INTEGER` | NO | - | Calendar quarter index (1–4). | `2` |
+| `year_number` | `INTEGER` | NO | - | Four-digit calendar year. | `2024` |
 
 ---
 
-## 2. Operational & Transactional Fact Tables
+### 2.2 `dim_mushroom`
+- **Schema:** `analytics_analytics`
+- **Granularity:** 1 row per cultivated fungal species.
+- **Primary Key:** `mushroom_id` (`VARCHAR(10)`)
+- **Row Count:** 3 rows (`MSH-01`, `MSH-02`, `MSH-03`).
+- **Business Purpose:** Master biological taxonomy and baseline performance parameters.
 
-### 2.1 `production_batches.csv`
-- **Grain**: 1 row per formulated substrate batch.
-- **Primary Key**: `batch_id` (`VARCHAR(15)`)
-- **Foreign Keys**: `mushroom_id` -> `mushroom_varieties.mushroom_id`, `growing_room_id` -> `locations.location_id`
-
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `batch_id` | String | `VARCHAR(15)` | NO | Unique batch serial number. | ID | `BAT-00001` |
-| `mushroom_id` | String | `VARCHAR(10)` | NO | Cultivated variety key. | FK | `MSH-01` |
-| `mushroom_variety` | String | `VARCHAR(50)` | NO | Denormalized variety trade name. | Text | `Pearl Oyster` |
-| `substrate_formula` | String | `VARCHAR(150)` | NO | Textual description of substrate recipe. | Text | `Pasteurized Wheat Straw + 10% Wheat Bran` |
-| `planned_blocks_count`| Integer | `INTEGER` | NO | Total fruiting bags/blocks inoculated. | Count | `40` |
-| `dry_substrate_kg` | Float | `NUMERIC(10,3)` | NO | Dry weight of substrate prior to hydration. | kg | `40.000` |
-| `water_liters_added` | Float | `NUMERIC(10,1)` | NO | Hydration liquid volume added. | Liters | `60.0` |
-| `spawn_kg` | Float | `NUMERIC(8,3)` | NO | Mass of sterilized grain spawn inoculated. | kg | `4.000` |
-| `batch_start_date` | Date | `DATE` | NO* | Inoculation start date (nullable only in DQ test anomaly). | YYYY-MM-DD | `2024-05-02` |
-| `transfer_to_fruiting_date`| Date | `DATE` | YES | Date transferred to fruiting room upon colonization. | YYYY-MM-DD | `2024-05-22` |
-| `growing_room_id` | String | `VARCHAR(10)` | NO | Assigned fruiting room location. | FK | `LOC-01` |
-| `expected_first_harvest_date`| Date | `DATE` | YES | Planned target date for Flush 1. | YYYY-MM-DD | `2024-05-28` |
-| `target_yield_kg` | Float | `NUMERIC(10,3)` | NO | Theoretical planned target yield. | kg | `37.000` |
-| `direct_material_cost` | Float | `NUMERIC(10,2)` | NO | Substrate + spawn + bag consumable cost. | USD ($) | `88.50` |
-| `batch_status` | String | `VARCHAR(20)` | NO | Status: `COMPLETED`, `CONTAMINATED`, `IN_PROGRESS`. | Text | `COMPLETED` |
-| `is_stress_event` | Boolean | `BOOLEAN` | NO | Flag indicating intentional environmental stress test. | Bool | `false` |
-| `notes` | String | `TEXT` | YES | Operational clipboard log observations. | Text | `Normal incubation run` |
-| `source_type` | String | `VARCHAR(30)` | NO | Lineage tag (`synthetic_demo` or `synthetic_demo_DQ_TEST`). | Enum | `synthetic_demo` |
+| Column Name | Data Type | Nullable | PK / FK | Description & Business Definition | Example Value |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| `mushroom_id` | `VARCHAR(10)` | NO | PK | Unique biological variety code. | `MSH-01` |
+| `mushroom_common_name` | `VARCHAR(50)` | NO | - | Commercial trade name. | `Pearl Oyster` |
+| `scientific_name` | `VARCHAR(100)` | NO | - | Botanical Latin binomial name. | `Pleurotus ostreatus` |
+| `substrate_formula` | `VARCHAR(150)` | NO | - | Standard substrate formulation recipe. | `Pasteurized Wheat Straw + 10% Wheat Bran` |
+| `incubation_days_min` | `INTEGER` | NO | - | Minimum expected spawn-run colonization days. | `18` |
+| `incubation_days_max` | `INTEGER` | NO | - | Maximum expected spawn-run colonization days. | `22` |
+| `biological_efficiency_min` | `NUMERIC(4,2)` | NO | - | Lower bound of expected BE ratio ($\text{yield} / \text{dry substrate}$). | `0.75` |
+| `biological_efficiency_max` | `NUMERIC(4,2)` | NO | - | Upper bound of expected BE ratio. | `1.10` |
+| `standard_shelf_life_days` | `INTEGER` | NO | - | Post-harvest usable cold-storage shelf life in days. | `5` |
+| `spawn_rate_ratio` | `NUMERIC(4,3)` | NO | - | Inoculation ratio by weight ($\text{spawn} / \text{dry substrate}$). | `0.100` |
 
 ---
 
-### 2.2 `harvest_records.csv`
-- **Grain**: 1 row per harvest flush event per batch.
-- **Primary Key**: `harvest_id` (`VARCHAR(15)`)
-- **Foreign Key**: `batch_id` -> `production_batches.batch_id`
+### 2.3 `dim_product`
+- **Schema:** `analytics_analytics`
+- **Granularity:** 1 row per finished goods sellable SKU.
+- **Primary Key:** `product_id` (`VARCHAR(10)`)
+- **Row Count:** 13 rows.
+- **Business Purpose:** Commercial packaging catalog, pack weights, grades, and list prices.
 
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `harvest_id` | String | `VARCHAR(15)` | NO | Unique harvest event number. | ID | `HRV-00001` |
-| `batch_id` | String | `VARCHAR(15)` | NO | Parent production batch. | FK | `BAT-00001` |
-| `harvest_date` | Date | `DATE` | NO | Date mushrooms were cut from blocks. | YYYY-MM-DD | `2024-05-28` |
-| `flush_number` | Integer | `INTEGER` | NO | Production wave number (`1` or `2`). | Integer | `1` |
-| `gross_harvested_kg` | Float | `NUMERIC(10,3)` | NO | Total unsorted cut weight. | kg | `25.500` |
-| `accepted_weight_kg` | Float | `NUMERIC(10,3)` | NO | Marketable weight meeting quality specs. | kg | `24.400` |
-| `rejected_weight_kg` | Float | `NUMERIC(10,3)` | NO | Discarded harvest floor defects. | kg | `1.100` |
-| `rejection_reason` | String | `VARCHAR(100)` | YES | Reason code for harvest floor rejection. | Text | `Bacterial blotch` |
-| `labor_hours` | Float | `NUMERIC(6,2)` | NO | Man-hours expended picking and grading. | Hours | `2.50` |
-| `source_type` | String | `VARCHAR(30)` | NO | Lineage tag. | Enum | `synthetic_demo` |
-
-*Reconciliation Invariant*: `gross_harvested_kg = accepted_weight_kg + rejected_weight_kg`.
-
----
-
-### 2.3 `inventory_movements.csv`
-- **Grain**: 1 row per stock change transaction.
-- **Primary Key**: `movement_id` (`VARCHAR(15)`)
-- **Foreign Keys**: `lot_id` -> `lot_id`, `product_id` -> `products.product_id`, `batch_id` -> `production_batches.batch_id`
-
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `movement_id` | String | `VARCHAR(15)` | NO | Unique stock transaction identifier. | ID | `MOV-00001` |
-| `lot_id` | String | `VARCHAR(15)` | NO | Cold-storage tracking lot number. | ID | `LOT-00001` |
-| `product_id` | String | `VARCHAR(10)` | NO | Finished goods SKU identifier. | FK | `PRD-001` |
-| `mushroom_id` | String | `VARCHAR(10)` | NO | Biological variety key. | FK | `MSH-01` |
-| `batch_id` | String | `VARCHAR(15)` | YES | Parent batch (if traceable). | FK | `BAT-00001` |
-| `harvest_id` | String | `VARCHAR(15)` | YES | Inbound harvest event (for receipts). | FK | `HRV-00001` |
-| `movement_date` | Date | `DATE` | NO | Date transaction physically occurred. | YYYY-MM-DD | `2024-05-28` |
-| `movement_type` | String | `VARCHAR(30)` | NO | `HARVEST_IN`, `SALE_OUT`, `WASTE_OUT`, `RETURN_DISCARDED`. | Enum | `HARVEST_IN` |
-| `signed_quantity_kg` | Float | `NUMERIC(10,3)` | NO | Signed mass (+ for IN, - for OUT). | kg | `+24.400` |
-| `unit_cost` | Float | `NUMERIC(10,4)` | NO | Unit valuation per kilogram. | USD / kg | `3.6270` |
-| `total_movement_value`| Float | `NUMERIC(10,2)` | NO | Financial valuation of transaction (`signed_qty * unit_cost`). | USD ($) | `88.50` |
-| `expiry_date` | Date | `DATE` | YES | Lot shelf-life expiry limit. | YYYY-MM-DD | `2024-06-02` |
-| `reason` | String | `VARCHAR(150)` | YES | Context note or sales reference. | Text | `Fresh harvest receipt into cold storage` |
-| `reference_transaction_id`| String | `VARCHAR(20)` | YES | Originating document ID (`harvest_id`, `line_id`, `waste_id`).| Ref | `HRV-00001` |
+| Column Name | Data Type | Nullable | PK / FK | Description & Business Definition | Example Value |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| `product_id` | `VARCHAR(10)` | NO | PK | Unique finished product SKU identifier. | `PRD-001` |
+| `sku_code` | `VARCHAR(30)` | NO | - | Structured alphanumeric code. | `MSH-01-WHL-01KG` |
+| `product_name` | `VARCHAR(100)` | NO | - | Full commercial product description. | `Pearl Oyster Bulk Wholesale Crate 1 kg` |
+| `mushroom_id` | `VARCHAR(10)` | NO | FK | Foreign key referencing `dim_mushroom`. | `MSH-01` |
+| `mushroom_common_name` | `VARCHAR(50)` | NO | - | De-normalized mushroom common name. | `Pearl Oyster` |
+| `package_format` | `VARCHAR(40)` | NO | - | Packaging type: `Bulk Crate`, `Brown Bag`, `Clamshell Punnet`. | `Bulk Crate` |
+| `unit_weight_kg` | `NUMERIC(6,3)` | NO | - | Nominal packaged weight in kilograms. | `1.000` |
+| `quality_grade` | `VARCHAR(20)` | NO | - | Quality tier (`Grade A`, `Grade B`). | `Grade A` |
+| `standard_selling_price`| `NUMERIC(10,2)`| NO | - | Standard wholesale/retail list price (USD). | `16.00` |
+| `is_active` | `BOOLEAN` | NO | - | Active product availability flag. | `true` |
 
 ---
 
-### 2.4 `sales_orders.csv`
-- **Grain**: 1 row per commercial order header.
-- **Primary Key**: `order_id` (`VARCHAR(15)`)
-- **Foreign Key**: `customer_id` -> `customers.customer_id`
+### 2.4 `dim_customer`
+- **Schema:** `analytics_analytics`
+- **Granularity:** 1 row per customer account.
+- **Primary Key:** `customer_id` (`VARCHAR(10)`)
+- **Row Count:** 20 rows.
+- **Business Purpose:** Customer master with pre-calculated lifetime value (LTV), order frequency, and tenure attributes.
 
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `order_id` | String | `VARCHAR(15)` | NO | Unique order reference code. | ID | `ORD-00001` |
-| `customer_id` | String | `VARCHAR(10)` | NO | Purchasing customer account key. | FK | `CUS-001` |
-| `order_date` | Date | `DATE` | NO | Inbound order booking date. | YYYY-MM-DD | `2024-05-29` |
-| `requested_delivery_date`| Date | `DATE` | NO | Customer requested drop date. | YYYY-MM-DD | `2024-05-31` |
-| `actual_delivery_date` | Date | `DATE` | YES | Actual confirmed drop-off date. | YYYY-MM-DD | `2024-05-31` |
-| `order_status` | String | `VARCHAR(20)` | NO | `COMPLETED`, `CANCELLED`, `PENDING`. | Enum | `COMPLETED` |
-| `payment_status` | String | `VARCHAR(20)` | NO | `PAID`, `OUTSTANDING`. | Enum | `PAID` |
-| `sales_channel` | String | `VARCHAR(30)` | NO | Channel: Wholesale Direct, Market Direct, D2C. | Text | `Wholesale Direct` |
-
----
-
-### 2.5 `sales_order_lines.csv`
-- **Grain**: 1 row per product SKU line item on an order.
-- **Primary Key**: `order_line_id` (`VARCHAR(15)`)
-- **Foreign Keys**: `order_id` -> `sales_orders.order_id`, `product_id` -> `products.product_id`
-
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `order_line_id` | String | `VARCHAR(15)` | NO | Unique line item identifier. | ID | `LIN-00001` |
-| `order_id` | String | `VARCHAR(15)` | NO | Parent order key. | FK | `ORD-00001` |
-| `product_id` | String | `VARCHAR(10)` | NO | SKU delivered. | FK | `PRD-001` |
-| `mushroom_id` | String | `VARCHAR(10)` | NO | Biological variety key. | FK | `MSH-01` |
-| `lot_id` | String | `VARCHAR(15)` | NO | Originating inventory lot drained. | FK | `LOT-00001` |
-| `quantity_ordered_kg`| Float | `NUMERIC(10,3)` | NO | Quantity requested by customer in kg. | kg | `5.000` |
-| `quantity_fulfilled_kg`| Float | `NUMERIC(10,3)` | NO | Actual quantity dispatched and invoiced. | kg | `5.000` |
-| `unit_of_measure` | String | `VARCHAR(10)` | NO | Standardized unit (`kg`). | Text | `kg` |
-| `unit_selling_price`| Float | `NUMERIC(10,2)` | NO | Unit list price per kilogram. | USD ($) | `16.00` |
-| `discount_amount` | Float | `NUMERIC(10,2)` | NO | Promotional or volume price concession. | USD ($) | `4.00` |
-| `gross_revenue` | Float | `NUMERIC(10,2)` | NO | `quantity_fulfilled_kg * unit_selling_price`. | USD ($) | `80.00` |
-| `net_revenue` | Float | `NUMERIC(10,2)` | NO | `gross_revenue - discount_amount`. | USD ($) | `76.00` |
+| Column Name | Data Type | Nullable | PK / FK | Description & Business Definition | Example Value |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| `customer_id` | `VARCHAR(10)` | NO | PK | Unique customer account number. | `CUS-001` |
+| `customer_name` | `VARCHAR(100)` | NO | - | Trading name or commercial moniker. | `Sage & Ember Restaurant` |
+| `customer_segment` | `VARCHAR(30)` | NO | - | Channel: `Restaurant`, `Boutique Grocer`, `Farmers Market`, `Direct to Consumer`. | `Restaurant` |
+| `delivery_route_zone` | `VARCHAR(30)` | NO | - | Geographic logistics zone (`Downtown`, `North Metro`, `West Suburbs`). | `Downtown Core` |
+| `payment_terms_days` | `INTEGER` | NO | - | Standard net payment window (`0`, `7`, `14`, `30`). | `14` |
+| `preferred_variety_id` | `VARCHAR(10)` | YES | FK | Primary mushroom variety preferred by customer. | `MSH-01` |
+| `acquisition_date` | `DATE` | NO | - | Date of initial commercial onboarding. | `2024-05-01` |
+| `is_active` | `BOOLEAN` | NO | - | Account active status flag. | `true` |
+| `total_completed_orders`| `INTEGER` | NO | - | Count of completed sales transactions. | `7` |
+| `lifetime_net_revenue` | `NUMERIC(12,2)`| NO | - | Total net recognized revenue generated to date. | `1219.00` |
+| `lifetime_fulfilled_kg`| `NUMERIC(10,3)`| NO | - | Total product mass delivered in kilograms. | `74.000` |
+| `average_order_value` | `NUMERIC(10,2)`| NO | - | Mean revenue per completed order ($\text{LTV} / \text{orders}$). | `174.14` |
+| `is_repeat_customer` | `BOOLEAN` | NO | - | True if `total_completed_orders >= 2`. | `true` |
+| `customer_tenure_days` | `INTEGER` | NO | - | Elapsed days from acquisition to reference date. | `213` |
 
 ---
 
-### 2.6 `expenses.csv`
-- **Grain**: 1 row per operational expenditure payment.
-- **Primary Key**: `expense_id` (`VARCHAR(15)`)
-- **Foreign Keys**: `expense_category_id` -> `expense_categories.category_id`, `supplier_id` -> `suppliers.supplier_id`
+### 2.5 `dim_supplier`
+- **Schema:** `analytics_analytics`
+- **Granularity:** 1 row per raw material vendor.
+- **Primary Key:** `supplier_id` (`VARCHAR(10)`)
+- **Row Count:** 10 rows.
+- **Business Purpose:** Vendor master for spawn, substrate ingredients, packaging, and facility consumables.
 
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `expense_id` | String | `VARCHAR(15)` | NO | Unique expense voucher number. | ID | `EXP-00001` |
-| `expense_date` | Date | `DATE` | NO | Incurred transaction date. | YYYY-MM-DD | `2024-05-01` |
-| `expense_category_id`| String | `VARCHAR(10)` | NO | Chart-of-accounts classification key. | FK | `EXP-10` |
-| `description` | String | `VARCHAR(150)` | NO | Explanatory note or invoice line description. | Text | `Facility lease - monthly rent` |
-| `amount` | Float | `NUMERIC(10,2)` | NO | Outflow monetary value. | USD ($) | `1200.00` |
-| `currency` | String | `VARCHAR(5)` | NO | Currency denomination. | ISO Code | `USD` |
-| `supplier_id` | String | `VARCHAR(10)` | YES | Paid vendor (if applicable). | FK | `SUP-08` |
-| `batch_id` | String | `VARCHAR(15)` | YES | Direct batch attribution (if applicable). | FK | `""` |
-| `allocation_method` | String | `VARCHAR(30)` | NO | Fixed Monthly, Variable Period, Direct Batch. | Text | `Fixed Monthly` |
-
----
-
-### 2.7 `purchases.csv`
-- **Grain**: 1 row per procurement purchase order receipt.
-- **Primary Key**: `purchase_id` (`VARCHAR(15)`)
-- **Foreign Key**: `supplier_id` -> `suppliers.supplier_id`
-
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `purchase_id` | String | `VARCHAR(15)` | NO | Purchase receipt serial number. | ID | `PUR-00001` |
-| `supplier_id` | String | `VARCHAR(10)` | NO | Sourced vendor account key. | FK | `SUP-01` |
-| `purchase_date` | Date | `DATE` | NO | Purchase order placement date. | YYYY-MM-DD | `2024-05-04` |
-| `material_name` | String | `VARCHAR(100)` | NO | Material description. | Text | `Grain Spawn (Rye Berries, Sterilized)` |
-| `unit_of_measure` | String | `VARCHAR(20)` | NO | Metric unit (kg, units, bales). | Text | `kg` |
-| `quantity_ordered` | Float | `NUMERIC(10,2)` | NO | Quantity requested on PO. | Number | `4.50` |
-| `quantity_received`| Float | `NUMERIC(10,2)` | NO | Quantity delivered and accepted. | Number | `4.50` |
-| `unit_price` | Float | `NUMERIC(10,4)` | NO | Price per purchase unit. | USD ($) | `10.8500` |
-| `total_cost` | Float | `NUMERIC(10,2)` | NO | Total invoiced purchase amount (`qty_received * unit_price`). | USD ($) | `48.83` |
-| `delivery_date` | Date | `DATE` | YES | Date stock arrived on site. | YYYY-MM-DD | `2024-05-08` |
-| `payment_status` | String | `VARCHAR(20)` | NO | `PAID` or `OUTSTANDING`. | Text | `PAID` |
+| Column Name | Data Type | Nullable | PK / FK | Description & Business Definition | Example Value |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| `supplier_id` | `VARCHAR(10)` | NO | PK | Unique supplier code. | `SUP-001` |
+| `supplier_name` | `VARCHAR(100)` | NO | - | Business trading name. | `Cascadia Spawn Laboratories` |
+| `material_category` | `VARCHAR(50)` | NO | - | Primary commodity provided (`Spawn`, `Substrate`, `Packaging`, `Equipment`). | `Grain Spawn` |
+| `lead_days_min` | `INTEGER` | NO | - | Minimum lead time in days. | `14` |
+| `lead_days_max` | `INTEGER` | NO | - | Maximum lead time in days. | `21` |
+| `payment_terms_days` | `INTEGER` | NO | - | Credit payment terms (`15`, `30`, `60`). | `30` |
 
 ---
 
-### 2.8 `waste_events.csv`
-- **Grain**: 1 row per post-harvest inventory loss or disposal incident.
-- **Primary Key**: `waste_id` (`VARCHAR(15)`)
-- **Foreign Keys**: `lot_id` -> `inventory_movements.lot_id`, `product_id` -> `products.product_id`
+### 2.6 `dim_expense_category`
+- **Schema:** `analytics_analytics`
+- **Granularity:** 1 row per accounting expense classification.
+- **Primary Key:** `category_id` (`VARCHAR(10)`)
+- **Row Count:** 14 rows.
+- **Business Purpose:** Standardized chart of accounts for managerial accounting.
 
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `waste_id` | String | `VARCHAR(15)` | NO | Unique disposal event identifier. | ID | `WST-00001` |
-| `lot_id` | String | `VARCHAR(15)` | NO | Cold-storage lot written off. | FK | `LOT-00002` |
-| `product_id` | String | `VARCHAR(10)` | NO | Product SKU written off. | FK | `PRD-001` |
-| `mushroom_id` | String | `VARCHAR(10)` | NO | Biological variety key. | FK | `MSH-01` |
-| `waste_date` | Date | `DATE` | NO | Date stock was discarded/composted. | YYYY-MM-DD | `2024-06-03` |
-| `waste_type` | String | `VARCHAR(30)` | NO | `COLD_STORAGE_SPOILAGE`, `PHYSICAL_DAMAGE`. | Enum | `COLD_STORAGE_SPOILAGE` |
-| `waste_kg` | Float | `NUMERIC(10,3)` | NO | Mass discarded in kilograms. | kg | `2.400` |
-| `estimated_unit_cost`| Float | `NUMERIC(10,4)`| NO | Cost valuation per kg. | USD / kg | `3.6270` |
-| `estimated_waste_value`| Float | `NUMERIC(10,2)`| NO | Dollar write-off amount (`waste_kg * unit_cost`). | USD ($) | `8.70` |
-| `reason_code` | String | `VARCHAR(150)` | NO | Operational investigation reason code. | Text | `Cold storage spoilage - shelf life exceeded` |
-| `disposition` | String | `VARCHAR(30)` | NO | Physical outcome: `Composted`, `Discarded`. | Text | `Composted` |
+| Column Name | Data Type | Nullable | PK / FK | Description & Business Definition | Example Value |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| `category_id` | `VARCHAR(10)` | NO | PK | Unique expense category code. | `EXP-CAT-01` |
+| `category_name` | `VARCHAR(80)` | NO | - | Accounting line name. | `Substrate Raw Materials` |
+| `cost_behavior` | `VARCHAR(20)` | NO | - | Managerial classification (`Variable`, `Fixed`, `Semi-Variable`). | `Variable` |
+| `financial_statement_section` | `VARCHAR(40)` | NO | - | Income statement section: `COGS`, `Facility Overhead`, `SG&A`, `Logistics`. | `Cost of Goods Sold` |
 
 ---
 
-### 2.9 `returns.csv`
-- **Grain**: 1 row per customer delivery return / credit note.
-- **Primary Key**: `return_id` (`VARCHAR(15)`)
-- **Foreign Keys**: `original_order_line_id` -> `sales_order_lines.order_line_id`, `customer_id` -> `customers.customer_id`
+### 2.7 `dim_location`
+- **Schema:** `analytics_analytics`
+- **Granularity:** 1 row per physical room or zone in the cultivation facility.
+- **Primary Key:** `location_id` (`VARCHAR(10)`)
+- **Row Count:** 5 rows.
+- **Business Purpose:** Physical facility footprint and capacity tracking.
 
-| Column Name | Data Type | Physical DB Type | Nullable | Description / Business Rules | Unit / Format | Example Value |
-| :--- | :--- | :--- | :---: | :--- | :--- | :--- |
-| `return_id` | String | `VARCHAR(15)` | NO | Return credit note reference. | ID | `RET-00001` |
-| `original_order_line_id`| String | `VARCHAR(15)` | NO | Originating sales order line returned. | FK | `LIN-00014` |
-| `original_order_id`| String | `VARCHAR(15)` | NO | Originating sales order header. | FK | `ORD-00008` |
-| `product_id` | String | `VARCHAR(10)` | NO | Product SKU returned. | FK | `PRD-001` |
-| `mushroom_id` | String | `VARCHAR(10)` | NO | Biological variety key. | FK | `MSH-01` |
-| `return_date` | Date | `DATE` | NO | Date return was reported/processed. | YYYY-MM-DD | `2024-06-18` |
-| `return_type` | String | `VARCHAR(30)` | NO | `CUSTOMER_RETURN`. | Enum | `CUSTOMER_RETURN` |
-| `return_kg` | Float | `NUMERIC(10,3)` | NO | Physical quantity returned in kg. | kg | `1.500` |
-| `credit_value` | Float | `NUMERIC(10,2)` | NO | Dollar amount refunded/credited to customer. | USD ($) | `24.00` |
-| `reason` | String | `VARCHAR(150)` | NO | Explanation for customer rejection. | Text | `Mushrooms degraded in transit - heat exposure` |
-| `disposition` | String | `VARCHAR(50)` | NO | Disposition: Perishable goods immediately discarded. | Text | `Discarded - perishable goods` |
+| Column Name | Data Type | Nullable | PK / FK | Description & Business Definition | Example Value |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| `location_id` | `VARCHAR(10)` | NO | PK | Facility zone identifier. | `LOC-01` |
+| `location_name` | `VARCHAR(50)` | NO | - | Descriptive room moniker. | `Incubation Room A` |
+| `max_capacity_blocks` | `INTEGER` | NO | - | Maximum substrate blocks accommodating zone. | `400` |
+| `is_temperature_controlled` | `BOOLEAN` | NO | - | True if zone features automated HVAC/humidity control. | `true` |
 
 ---
 
-## 3. Data Warehouse Audit Envelope (`raw.*` metadata)
+## 3. Enterprise Fact Tables (`analytics_analytics.fact_*`)
 
-When raw files are loaded into PostgreSQL by the Python ingestion engine, four technical metadata columns are appended to every table:
+---
 
-| Technical Metadata Column | Physical DB Type | Description / Integrity Purpose |
-| :--- | :--- | :--- |
-| `_source_file` | `VARCHAR(255)` | Relative or absolute path of the source file from which the row was extracted. |
-| `_ingested_at` | `TIMESTAMP WITH TIME ZONE` | System timestamp when the row was committed to the raw table. |
-| `_ingestion_run_id` | `UUID` | Foreign key referencing the master execution batch in `audit.pipeline_runs`. |
-| `_row_fingerprint` | `VARCHAR(64)` | SHA-256 hash computed across business key columns to guarantee idempotent loading. |
+### 3.1 `fact_production_batches`
+- **Schema:** `analytics_analytics`
+- **Granularity:** 1 row per inoculated cultivation batch.
+- **Primary Key:** `batch_id` (`VARCHAR(10)`)
+- **Row Count:** 31 completed batches.
+- **Business Purpose:** Comprehensive lifecycle tracking from substrate mixing to final chamber turnover.
+
+| Column Name | Data Type | Nullable | PK / FK | Description & Business Definition | Example Value |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| `batch_id` | `VARCHAR(10)` | NO | PK | Unique batch tracking number. | `BAT-00001` |
+| `mushroom_id` | `VARCHAR(10)` | NO | FK | Reference to `dim_mushroom`. | `MSH-01` |
+| `location_id` | `VARCHAR(10)` | NO | FK | Reference to `dim_location` (fruiting room). | `LOC-03` |
+| `batch_start_date` | `DATE` | NO | - | Inoculation / substrate preparation date. | `2024-05-01` |
+| `transfer_to_fruiting_date`| `DATE` | NO | - | Transfer date from incubation to fruiting chamber. | `2024-05-20` |
+| `first_harvest_date` | `DATE` | YES | - | Date of initial Flush 1 harvest. | `2024-05-27` |
+| `last_harvest_date` | `DATE` | YES | - | Date of final flush harvest before block dump. | `2024-06-18` |
+| `planned_blocks_count` | `INTEGER` | NO | - | Number of substrate blocks inoculated. | `30` |
+| `dry_substrate_kg` | `NUMERIC(10,3)`| NO | - | Total dry base material weight in kilograms. | `75.000` |
+| `spawn_kg` | `NUMERIC(8,3)` | NO | - | Total grain spawn weight utilized in kilograms. | `7.500` |
+| `target_yield_kg` | `NUMERIC(10,3)`| NO | - | Expected fresh harvest yield based on baseline BE. | `67.500` |
+| `direct_material_cost` | `NUMERIC(10,2)`| NO | - | Sum of dry substrate and spawn purchase cost. | `72.50` |
+| `total_flushes_recorded`| `INTEGER` | NO | - | Total flush harvest cycles logged. | `3` |
+| `total_gross_harvested_kg`| `NUMERIC(10,3)`| NO | - | Total fresh weight harvested across all flushes. | `71.200` |
+| `total_accepted_harvest_kg`| `NUMERIC(10,3)`| NO | - | Marketable fresh harvest weight (Grade A + B). | `68.500` |
+| `total_rejected_harvest_kg`| `NUMERIC(10,3)`| NO | - | Substandard / contaminated harvest discarded. | `2.700` |
+| `total_harvest_labor_hours`| `NUMERIC(8,2)` | NO | - | Total hours spent harvesting and trimming. | `9.50` |
+| `rejection_rate_pct` | `NUMERIC(5,2)` | NO | - | Rejected harvest as % of gross ($\text{rejected} / \text{gross} \times 100$). | `3.79` |
+| `biological_efficiency_pct`| `NUMERIC(6,2)` | NO | - | Realized BE ($\text{accepted kg} / \text{dry substrate kg} \times 100$). | `91.33` |
+| `target_achievement_pct`| `NUMERIC(6,2)` | NO | - | Yield attainment ($\text{accepted kg} / \text{target yield kg} \times 100$). | `101.48` |
+| `cycle_duration_days` | `INTEGER` | NO | - | Total days elapsed from start to last harvest. | `48` |
+| `direct_material_cost_per_kg`| `NUMERIC(8,2)`| NO | - | Material cost per accepted kg ($\text{cost} / \text{accepted kg}$). | `1.06` |
+| `batch_status` | `VARCHAR(20)` | NO | - | Operational state: `COMPLETED`, `CONTAMINATED`. | `COMPLETED` |
+| `is_stress_event` | `BOOLEAN` | NO | - | True if batch suffered environmental stress or contamination. | `false` |
+
+---
+
+### 3.2 `fact_harvest`
+- **Schema:** `analytics_analytics`
+- **Granularity:** 1 row per flush harvest event.
+- **Primary Key:** `harvest_id` (`VARCHAR(10)`)
+- **Row Count:** 45 records.
+- **Business Purpose:** Granular flush-by-flush yield, labor, and rejection tracking.
+
+| Column Name | Data Type | Nullable | PK / FK | Description & Business Definition | Example Value |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| `harvest_id` | `VARCHAR(10)` | NO | PK | Unique harvest record number. | `HRV-00001` |
+| `batch_id` | `VARCHAR(10)` | NO | FK | Reference to parent `fact_production_batches`. | `BAT-00001` |
+| `mushroom_id` | `VARCHAR(10)` | NO | FK | Reference to `dim_mushroom`. | `MSH-01` |
+| `location_id` | `VARCHAR(10)` | NO | FK | Reference to `dim_location` (fruiting room). | `LOC-03` |
+| `harvest_date` | `DATE` | NO | - | Date harvest was pulled from fruiting chamber. | `2024-05-27` |
+| `flush_number` | `INTEGER` | NO | - | Sequential flush index (`1`, `2`, `3`). | `1` |
+| `gross_harvested_kg` | `NUMERIC(8,3)` | NO | - | Fresh weight harvested before trimming. | `38.200` |
+| `accepted_weight_kg` | `NUMERIC(8,3)` | NO | - | Marketable yield graded and moved to cold storage. | `37.000` |
+| `rejected_weight_kg` | `NUMERIC(8,3)` | NO | - | Damaged, deformed, or bacterial-blotch mass discarded. | `1.200` |
+| `rejection_rate_pct` | `NUMERIC(5,2)` | NO | - | Percentage discarded ($\text{rejected} / \text{gross} \times 100$). | `3.14` |
+| `rejection_reason` | `VARCHAR(100)` | YES | - | Primary defect: `Bacterial Blotch`, `Deformed Caps`, `Spore Drop`. | `Minor Cap Cracking` |
+| `labor_hours` | `NUMERIC(6,2)` | NO | - | Labor hours dedicated to picking and sorting flush. | `4.50` |
+
+---
+
+### 3.3 `fact_sales`
+- **Schema:** `analytics_analytics`
+- **Granularity:** 1 row per ordered line item on a customer invoice.
+- **Primary Key:** `order_line_id` (`VARCHAR(15)`)
+- **Row Count:** 112 lines.
+- **Business Purpose:** Commercial revenue recognition, volume fulfillment, returns, and gross profit.
+
+| Column Name | Data Type | Nullable | PK / FK | Description & Business Definition | Example Value |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| `order_line_id` | `VARCHAR(15)` | NO | PK | Unique order line item number. | `ORD-00001-01` |
+| `order_id` | `VARCHAR(10)` | NO | - | Parent sales order number. | `ORD-00001` |
+| `customer_id` | `VARCHAR(10)` | NO | FK | Reference to `dim_customer`. | `CUS-001` |
+| `product_id` | `VARCHAR(10)` | NO | FK | Reference to `dim_product`. | `PRD-001` |
+| `mushroom_id` | `VARCHAR(10)` | NO | FK | Reference to `dim_mushroom`. | `MSH-01` |
+| `lot_id` | `VARCHAR(15)` | NO | - | Inventory batch tracking lot code. | `LOT-20240527-01` |
+| `order_date` | `DATE` | NO | - | Date order was placed by customer. | `2024-05-28` |
+| `requested_delivery_date`| `DATE` | NO | - | Date customer requested fulfillment. | `2024-05-29` |
+| `actual_delivery_date` | `DATE` | YES | - | Actual delivery completion timestamp. | `2024-05-29` |
+| `sales_channel` | `VARCHAR(30)` | NO | - | Channel: `Wholesale Direct`, `Farmers Market`, `Online Store`. | `Wholesale Direct` |
+| `order_status` | `VARCHAR(20)` | NO | - | State: `DELIVERED`, `CANCELLED`, `PARTIAL`. | `DELIVERED` |
+| `payment_status` | `VARCHAR(20)` | NO | - | Financial state: `PAID`, `PENDING`, `OVERDUE`. | `PAID` |
+| `quantity_ordered_kg` | `NUMERIC(8,3)` | NO | - | Mass requested on initial purchase order. | `15.000` |
+| `quantity_fulfilled_kg`| `NUMERIC(8,3)` | NO | - | Mass physically delivered to customer. | `15.000` |
+| `returned_kg` | `NUMERIC(8,3)` | NO | - | Mass returned post-delivery due to quality/spoilage. | `0.000` |
+| `net_retained_quantity_kg`| `NUMERIC(8,3)`| NO | - | Mass retained by customer ($\text{fulfilled} - \text{returned}$). | `15.000` |
+| `fulfillment_rate_pct` | `NUMERIC(5,2)` | NO | - | OTIF fulfillment ratio ($\text{fulfilled} / \text{ordered} \times 100$). | `100.00` |
+| `unit_selling_price` | `NUMERIC(10,2)`| NO | - | Invoiced price per kilogram. | `16.00` |
+| `gross_revenue` | `NUMERIC(10,2)`| NO | - | Total invoice before discounts ($\text{ordered} \times \text{price}$). | `240.00` |
+| `discount_amount` | `NUMERIC(10,2)`| NO | - | Contractual wholesale or promotional deduction. | `0.00` |
+| `net_revenue` | `NUMERIC(10,2)`| NO | - | Invoiced net revenue ($\text{gross} - \text{discount}$). | `240.00` |
+| `credit_refund_amount` | `NUMERIC(10,2)`| NO | - | Credit memo issued for returned product. | `0.00` |
+| `final_recognized_revenue`| `NUMERIC(10,2)`| NO | - | GAAP net revenue recognized ($\text{net revenue} - \text{credit refunds}$). | `240.00` |
+| `estimated_cogs_amount`| `NUMERIC(10,2)`| NO | - | Estimated direct material and packing cost. | `40.80` |
+| `gross_profit_amount` | `NUMERIC(10,2)`| NO | - | Recognized revenue minus estimated COGS. | `199.20` |
+| `gross_margin_pct` | `NUMERIC(5,2)` | NO | - | Gross margin ratio ($\text{gross profit} / \text{recognized revenue} \times 100$). | `83.00` |
+
+---
+
+### 3.4 `fact_inventory_movements`
+- **Schema:** `analytics_analytics`
+- **Granularity:** 1 row per physical stock movement (inbound, outbound, waste adjustment).
+- **Primary Key:** `movement_id` (`VARCHAR(15)`)
+- **Row Count:** 176 ledger entries.
+- **Business Purpose:** Double-entry inventory balance tracking, FIFO shrinkage, and lot tracking.
+
+| Column Name | Data Type | Nullable | PK / FK | Description & Business Definition | Example Value |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| `movement_id` | `VARCHAR(15)` | NO | PK | Unique inventory movement ledger entry. | `MOV-000001` |
+| `lot_id` | `VARCHAR(15)` | NO | - | Traceability lot identifier. | `LOT-20240527-01` |
+| `product_id` | `VARCHAR(10)` | NO | FK | Reference to `dim_product`. | `PRD-001` |
+| `mushroom_id` | `VARCHAR(10)` | NO | FK | Reference to `dim_mushroom`. | `MSH-01` |
+| `batch_id` | `VARCHAR(10)` | NO | FK | Originating production batch number. | `BAT-00001` |
+| `harvest_id` | `VARCHAR(10)` | YES | FK | Reference to originating harvest event. | `HRV-00001` |
+| `movement_date` | `DATE` | NO | - | Date movement was logged in warehouse. | `2024-05-27` |
+| `movement_type` | `VARCHAR(30)` | NO | - | Action: `HARVEST_INBOUND`, `SALE_OUTBOUND`, `SPOILAGE_DISCARD`, `ADJUSTMENT`. | `HARVEST_INBOUND` |
+| `signed_quantity_kg` | `NUMERIC(10,3)`| NO | - | Net change in stock mass (positive = in, negative = out). | `37.000` |
+| `unit_cost` | `NUMERIC(10,2)`| NO | - | Valuation cost per kilogram. | `2.72` |
+| `total_movement_value` | `NUMERIC(10,2)`| NO | - | Financial value ($\text{quantity} \times \text{unit cost}$). | `100.64` |
+| `expiry_date` | `DATE` | YES | - | Shelf life expiration limit. | `2024-06-01` |
+| `reason` | `VARCHAR(100)` | YES | - | Explanation for loss or adjustment. | `Initial packing from harvest` |
+| `reference_transaction_id`| `VARCHAR(20)`| YES | - | Associated Order Line ID or Waste Event ID. | `HRV-00001` |
+
+---
+
+### 3.5 `fact_expenses`
+- **Schema:** `analytics_analytics`
+- **Granularity:** 1 row per cash expenditure or operational invoice.
+- **Primary Key:** `expense_id` (`VARCHAR(15)`)
+- **Row Count:** 51 expense vouchers.
+- **Business Purpose:** Facility overhead, utility bills, consumable purchases, and managerial OPEX.
+
+| Column Name | Data Type | Nullable | PK / FK | Description & Business Definition | Example Value |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| `expense_id` | `VARCHAR(15)` | NO | PK | Unique expense transaction voucher number. | `EXP-00001` |
+| `expense_date` | `DATE` | NO | - | Date invoice was incurred or payment cleared. | `2024-05-01` |
+| `category_id` | `VARCHAR(10)` | NO | FK | Reference to `dim_expense_category`. | `EXP-CAT-06` |
+| `supplier_id` | `VARCHAR(10)` | YES | FK | Reference to `dim_supplier` if vendor transaction. | `SUP-007` |
+| `batch_id` | `VARCHAR(10)` | YES | FK | Reference to `fact_production_batches` if direct cost. | `null` |
+| `description` | `VARCHAR(200)` | NO | - | Accounting memo describing purchase. | `Facility Lease - Warehouse Zone May 2024` |
+| `amount` | `NUMERIC(10,2)`| NO | - | Total dollar amount disbursed (USD). | `1200.00` |
+| `currency` | `VARCHAR(5)` | NO | - | Transaction currency (ISO standard). | `USD` |
+| `allocation_method` | `VARCHAR(30)` | NO | - | Allocation: `Direct Batch`, `Square Footage`, `Equal Monthly`. | `Facility Overhead` |
+
+---
+
+### 3.6 `fact_procurement`
+- **Schema:** `analytics_analytics`
+- **Granularity:** 1 row per purchase order placed with an external supplier.
+- **Primary Key:** `purchase_id` (`VARCHAR(15)`)
+- **Row Count:** 35 purchase orders.
+- **Business Purpose:** Inbound raw material logistics, supplier OTIF tracking, and material unit costs.
+
+| Column Name | Data Type | Nullable | PK / FK | Description & Business Definition | Example Value |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| `purchase_id` | `VARCHAR(15)` | NO | PK | Purchase order tracking number. | `PUR-00001` |
+| `supplier_id` | `VARCHAR(10)` | NO | FK | Reference to `dim_supplier`. | `SUP-001` |
+| `purchase_date` | `DATE` | NO | - | Date purchase order was submitted to vendor. | `2024-05-02` |
+| `delivery_date` | `DATE` | YES | - | Date delivery was physically received at dock. | `2024-05-18` |
+| `material_name` | `VARCHAR(100)` | NO | - | Description of commodity procured. | `M10-Pleurotus-Spawn-Bag-2.5kg` |
+| `unit_of_measure` | `VARCHAR(20)` | NO | - | Packaging unit: `Bag`, `Bale`, `Pack`, `Pallet`. | `Bag` |
+| `quantity_ordered` | `NUMERIC(10,2)`| NO | - | Units specified on purchase order. | `10.00` |
+| `quantity_received` | `NUMERIC(10,2)`| NO | - | Units physically inspected and accepted. | `10.00` |
+| `unit_price` | `NUMERIC(10,2)`| NO | - | Cost per unit pack. | `18.50` |
+| `total_cost` | `NUMERIC(10,2)`| NO | - | Net invoice cost ($\text{quantity} \times \text{unit price}$). | `185.00` |
+| `payment_status` | `VARCHAR(20)` | NO | - | Settlement status: `PAID`, `PENDING`. | `PAID` |
+| `supplier_lead_time_days`| `INTEGER` | YES | - | Days elapsed from order submission to dock receipt. | `16` |
+
+---
+
+## 4. Reporting Marts (`analytics_analytics.mart_*`)
+
+---
+
+### 4.1 `mart_business_overview`
+- **Granularity:** 1 row per calendar month (`year_month`).
+- **Primary Audience:** Executive Leadership, Investors, Board of Directors.
+- **Key Metrics:** Net Recognized Sales Revenue, Cost of Goods Sold (COGS), Gross Profit, Operating Expenses (OPEX), Operating Result (Net Income), Total Harvest Biomass (kg), Total Sales Biomass (kg).
+
+### 4.2 `mart_production_performance`
+- **Granularity:** 1 row per month per mushroom variety (`year_month`, `mushroom_common_name`).
+- **Primary Audience:** Head of Cultivation, Farm Operations Manager.
+- **Key Metrics:** Batches Started, Contaminated Batches Count, Blocks Inoculated, Gross Yield (kg), Accepted Yield (kg), Biological Efficiency (BE %), Rejection Rate (%), Mean Cycle Duration (days), Mean Material Cost per kg.
+
+### 4.3 `mart_sales_profitability`
+- **Granularity:** 1 row per month per customer segment per mushroom variety per channel (`year_month`, `customer_segment`, `mushroom_common_name`, `sales_channel`).
+- **Primary Audience:** VP of Sales, Revenue Operations, Account Executives.
+- **Key Metrics:** Orders Count, Mass Ordered (kg), Mass Fulfilled (kg), Mass Returned (kg), Net Retained (kg), Gross Invoiced Revenue, Net Revenue, Final Recognized Revenue, Realized Gross Margin (%), Effective ASP per kg ($/kg).
+
+### 4.4 `mart_inventory_waste`
+- **Granularity:** 1 row per month per loss stage per mushroom variety per reason code (`year_month`, `loss_stage`, `mushroom_common_name`, `reason_code`).
+- **Primary Audience:** Inventory Controller, Quality Assurance Lead.
+- **Key Metrics:** Loss Incidents Count, Total Lost Mass (kg), Total Financial Valuation of Loss ($).
+
+### 4.5 `mart_customer_analysis`
+- **Granularity:** 1 row per customer account (`customer_id`).
+- **Primary Audience:** Customer Success Manager, Marketing Lead.
+- **Key Metrics:** Completed Orders Count, Lifetime Delivered Mass (kg), Lifetime Net Revenue ($), Average Order Value (AOV), Revenue Share (% of Total), Cumulative Revenue Share (%), Revenue Rank, Pareto Tier (`Tier A: Top 80%`, `Tier B: Next 15%`, `Tier C: Bottom 5%`).
+
+---
+
+## 5. Technical Audit & Metadata Schema (`audit.*`)
+
+Every table in the `raw` schema preserves an immutable technical audit metadata envelope:
+- `_source_file`: Originating CSV file name.
+- `_ingested_at`: UTC timestamp of extraction and loading.
+- `_ingestion_run_id`: Unique batch execution ID (`RUN-YYYYMMDDHHMMSS-<hex>`).
+- `_row_fingerprint`: Cryptographic SHA-256 hash of all non-technical row attributes.
+
+### 5.1 `audit.pipeline_runs`
+Records high-level pipeline execution telemetry:
+`run_id`, `start_time`, `end_time`, `duration_seconds`, `status` (`SUCCESS` / `FAILED`), `total_files_processed`, `total_rows_extracted`, `total_rows_inserted`, `watermark_timestamp`, `error_message`.
+
+### 5.2 `audit.data_quality_issues`
+Captures pre-flight validation anomalies without breaking downstream processing unless critical:
+`issue_id`, `run_id`, `detected_at`, `source_file`, `source_row_index`, `column_name`, `check_type` (`DUPLICATE_PRIMARY_KEY`, `NULL_VIOLATION`, `RANGE_VIOLATION`, `FOREIGN_KEY_ORPHAN`), `severity` (`WARNING`, `ERROR`, `CRITICAL`), `issue_description`, `bad_value`.
