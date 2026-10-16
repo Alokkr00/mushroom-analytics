@@ -2,8 +2,8 @@
 
 **Document Version:** 1.0.0  
 **Project:** FungiFlow Organics Analytics Warehouse  
-**Author:** Lead Analytics Engineer & Data Platform Architect  
-**Classification:** Production Infrastructure Specification  
+**Author:** Freelance Data Analyst & Analytics Engineering Consultant  
+**Classification:** Operational Pipeline Specification  
 
 ---
 

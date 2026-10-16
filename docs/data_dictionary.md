@@ -2,8 +2,8 @@
 
 **Document Version:** 2.0.0  
 **Project:** FungiFlow Organics Analytics Warehouse  
-**Author:** Lead Analytics Engineer & Data Governance Architect  
-**Classification:** Enterprise Data Governance Standard  
+**Author:** Freelance Data Analyst & Analytics Engineering Consultant  
+**Classification:** Operational Data Dictionary Standard  
 
 ---
 

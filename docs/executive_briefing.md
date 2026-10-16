@@ -2,8 +2,8 @@
 
 **Document Type:** Executive Board Deck & Strategic Turnaround Brief  
 **Company:** FungiFlow Organics  
-**Prepared by:** Lead Analytics Engineer & Commercial Strategy Lead  
-**Classification:** Confidential — Executive & Board Review  
+**Prepared by:** Freelance Data Analyst & Commercial Analytics Consultant  
+**Classification:** Confidential — Client Operational Review  
 
 ---
 

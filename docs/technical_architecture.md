@@ -2,16 +2,16 @@
 
 **Document Version:** 1.0.0  
 **Project:** FungiFlow Organics Analytics Warehouse  
-**Author:** Lead Analytics Engineer & Data Platform Architect  
+**Author:** Freelance Data Analyst & Analytics Engineering Consultant  
 **Classification:** Engineering Specification  
 
 ---
 
 ## 1. Architectural Vision & System Topology
 
-The **MycoMetrics Data Platform** is an enterprise-grade, local-first, cloud-portable modern data platform designed specifically for the operational and financial realities of high-value indoor agricultural ventures. Gourmet mushroom cultivation demands strict environmental control, high batch turnover, and tight cash flow management.
+The **MycoMetrics Data Platform** is a local-first, zero-cloud-cost modern data stack designed specifically for the operational and financial realities of high-value indoor agricultural ventures. Gourmet mushroom cultivation demands strict environmental control, high batch turnover, and tight cash flow management.
 
-The architecture eliminates cloud data platform bloat (avoiding $5k–$20k/month minimum spend on Snowflake/Databricks/Kafka) by using **embedded vectorized SQL engines** (DuckDB) and **industry-standard ELT frameworks** (dbt Core) running on local compute or lightweight container workers, with seamless migration paths to PostgreSQL, MotherDuck, or cloud data warehouses.
+The architecture eliminates cloud data platform bloat (avoiding $5k–$20k/month minimum spend on Snowflake/Databricks/Kafka) by using **embedded vectorized SQL engines** (DuckDB) and **industry-standard ELT frameworks** (dbt Core) running on local compute or lightweight container workers, with clear migration paths to PostgreSQL, MotherDuck, or cloud data warehouses as the business expands.
 
 ```mermaid
 flowchart TD

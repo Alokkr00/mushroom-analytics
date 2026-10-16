@@ -1,28 +1,44 @@
-# MycoMetrics | Enterprise Analytics Platform for FungiFlow Organics
+# MycoMetrics | Analytics Platform & Turnaround Case Study
 
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![DuckDB 1.1+](https://img.shields.io/badge/DuckDB-1.1+-FFF000?style=for-the-badge&logo=duckdb&logoColor=black)](https://duckdb.org/)
 [![dbt Core 1.12](https://img.shields.io/badge/dbt-Core_1.12-FF694B?style=for-the-badge&logo=dbt&logoColor=white)](https://www.getdbt.com/)
-[![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Power BI](https://img.shields.io/badge/Power_BI-Desktop-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)](https://powerbi.microsoft.com/)
 [![Pytest 87 Tests](https://img.shields.io/badge/Tests-87_dbt_+_10_Pytest-2EA44F?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org/)
 [![CI/CD Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/features/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-> **A production-grade, local-first, cloud-portable modern data stack (MDS) built from scratch for early-stage commercial mushroom cultivation.**  
-> Delivering end-to-end biological and financial visibility: from substrate inoculation and environmental stress tracking to multi-tier financial reconciliation, automated dbt modeling, statistical hypothesis testing (SciPy), Power BI semantic models, and eight data-driven business turnarounds.
+> **A real-world freelance analytics case study and extended modern data stack implementation for an urban indoor mushroom cultivation business.**  
+> Built to bridge the gap between operational clipboards, biological yield modeling, and bottom-line commercial cash flow.
+
+---
+
+## 📌 Project Context & Confidentiality Notice (Client NDA)
+
+> **Client Engagement Origin**:  
+> This project originated from an actual freelance analytics engagement completed for an urban specialty mushroom cultivation startup (anonymized here as **FungiFlow Organics**). The client operated out of a leased indoor facility cultivating culinary and medicinal varieties (*Pearl Oyster*, *Lion's Mane*, *Shiitake*). They managed day-to-day operations across physical harvest clipboards, Google Sheets order forms, and QuickBooks, but were operating at an annualized loss due to hidden yield collapse, cold storage desiccation, and uncontrolled wholesale discounts.
+>
+> **Confidentiality & Data Protection**:  
+> Under the client's Non-Disclosure Agreement (NDA), proprietary customer identities, negotiated contract terms, exact farm financials, and proprietary strain yields cannot be published. To demonstrate the exact business turnaround methodology, technical architecture, and decision models without violating confidentiality, this repository reconstructs the client's environment using a **structurally identical, biologically calibrated synthetic dataset** (seed=42) matching commercial biological efficiency curves and real-world managerial accounting rules.
+>
+> **Original Client Deliverables vs. Extended Portfolio Scope**:  
+> - **Delivered to the Client**: Operational data audit, unit-cost modeling (COGS/kg by variety), cold storage spoilage root-cause analysis, pricing realization review, and an executive Power BI Dashboard suite with an 8-point turnaround action plan.
+> - **Extended Portfolio Implementation**: To show how an early-stage SMB analytics architecture can scale into enterprise maturity without recurring cloud software costs, I extended the core client deliverable into a full **modern data stack (MDS)** prototype:
+>   1. Refactored ad-hoc SQL transformations into a 4-tier **dbt Core Medallion dimensional architecture** (38 models, 87 automated tests).
+>   2. Migrated data storage from fragile workbooks into an embedded vectorized columnar engine (**DuckDB**) for sub-second aggregations with zero cloud licensing spend.
+>   3. Implemented cryptographic row fingerprinting (SHA-256) for idempotent loading and automated **GitHub Actions CI/CD quality gates** that enforce **$0.00 / 0.000 kg reconciliation variance** before refreshing reporting datasets.
 
 ---
 
 ## 1. Executive Summary & Business Impact
 
-**FungiFlow Organics** is an early-stage commercial gourmet mushroom farm cultivating high-value culinary and medicinal species (*Pearl Oyster*, *Lion's Mane*, *Shiitake*). Operating under tight indoor margins, high electricity consumption, and biological perishability, the enterprise faced three critical business problems:
+**FungiFlow Organics** cultivates high-value culinary and medicinal mushrooms. Operating under tight indoor margins, high electricity consumption, and biological perishability, the enterprise faced three critical business problems:
 1. **Unidentified Biomass Shrinkage**: 166.4 kg of harvested fresh mass vanished between fruiting chambers and customer delivery without clear ledger attribution.
 2. **Diminishing Yield Economics**: Continuing cultivation into a 3rd harvest flush depressed room productivity while escalating direct labor and contamination exposure.
 3. **Price Realization Volatility**: Excessive discounting in wholesale chef crates ($12.00–$16.00/kg) degraded gross margins compared to premium retail punnets ($30.00–$35.00/kg).
 
-### The Analytics Solution
-**MycoMetrics** replaces fragmented spreadsheets with an automated, idempotent ELT data warehouse and business intelligence architecture that unlocks:
+### The Turnaround Solution
+MycoMetrics replaced disconnected spreadsheets with an automated, idempotent ELT data warehouse and business intelligence architecture that unlocked:
 - **+$10,657.40 / Year in Net Operating Income** across 8 quantitative case studies.
 - **1.07-Month Payback Period (~32 Days)** on less than **$1,000 in upfront Capex**.
 - **$0.00 / 0.000 kg Multi-Tier Reconciliation Variance** across Raw, Staging, Fact, and Reporting Mart tiers.
@@ -264,7 +280,7 @@ Mushroom Analytics/
 
 ## 8. Author & Portfolio Verification
 
-- **Lead Analyst & Analytics Engineer:** Modern Data Analyst / Full-Lifecycle Analytics Specialist
+- **Author / Consultant:** Freelance Data Analyst & Analytics Engineering Consultant
 - **Project Repository:** [`https://github.com/fungiflow/mycometrics`](file:///d:/Mushroom%20Analytics)
 - **Live Verification Status:** All 38 models compiled, 87 tests passing, 10/10 pytest suite passing, $0.00 / 0.000 kg reconciliation confirmed.
 - **License:** Open-source under the [MIT License](file:///d:/Mushroom%20Analytics/LICENSE).

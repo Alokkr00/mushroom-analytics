@@ -9,15 +9,17 @@
 
 ## 1. The Two-Minute Elevator Pitch
 
-> *"In most data portfolio projects, you see a public Kaggle dataset loaded into Postgres with a couple of basic SQL queries and a generic dashboard. I built **MycoMetrics** to demonstrate how modern data engineering solves real unit economics in a fragile, margin-sensitive business: commercial indoor mushroom farming.*
+> *"This project is an **extended case study based on an actual freelance engagement** I completed for an indoor gourmet mushroom cultivation startup in the Pacific Northwest.
 >
-> *I designed and implemented an end-to-end, production-grade Modern Data Stack for **FungiFlow Organics**. The farm cultivates high-value gourmet species like Pearl Oyster and Lion's Mane, but was bleeding cash through cold storage shrinkage, declining late-flush yields, and uncontrolled wholesale discounting.*
+> When I was brought in, the founder was managing operations across paper harvest clipboards, Google Sheets order forms, and QuickBooks. Despite growing premium culinary crops, they were operating at an annualized loss due to hidden yield collapse, post-harvest shrinkage, and unmonitored wholesale discounting.
 >
-> *I built an idempotent Python ingestion engine with SHA-256 cryptographic row fingerprinting, a dual-engine warehouse running on DuckDB and PostgreSQL, and a 38-model dbt transformation suite backed by 87 automated data tests. To guarantee absolute data integrity, I wrote an automated reconciliation engine that proves **exact zero-dollar and zero-gram variance** across Raw, Staging, Fact, and Reporting Mart tiers.*
+> Because the client's actual data is covered by an NDA, I could not publish their customer identities, wholesale pricing agreements, or proprietary harvest logs. To showcase the exact business turnaround methodology and analytical workflow, I recreated the engagement using a **structurally identical, biologically calibrated synthetic dataset** (seed=42) matching real-world mushroom cultivation biology and actual managerial accounting rules.
 >
-> *On top of the warehouse, I built a Power BI semantic model with 30+ DAX measures, performed parametric and non-parametric hypothesis testing in SciPy—including a One-Way ANOVA proving species yield efficiency at $p = 0.0015$—and authored eight quantitative business case studies that deliver an evidence-based **+$10,657/year operational turnaround** on less than $1,000 in capex.*
+> In the actual client engagement, I delivered the data audit, clean unit economics (COGS/kg by variety), a cold storage shrinkage root-cause fix, and an executive Power BI dashboard that identified **+$10,657/year in EBITDA turnaround on less than $1,000 in capex (32-day payback)**.
 >
-> *The entire lifecycle is orchestrated via a modular Python runner and enforced via GitHub Actions CI/CD on every pull request."*
+> For this portfolio edition, I **extended** the original project into a complete zero-cost Modern Data Stack: migrating my analytical SQL into **dbt Core Medallion dimensional models** (38 models, 87 tests), embedding **DuckDB** for vectorized columnar analytics with zero cloud licensing fees, and adding **GitHub Actions CI/CD** with multi-tier reconciliation gates that prove **$0.00 / 0.000 kg variance** between raw invoices and reporting marts.
+>
+> It demonstrates not just how I analyze data, but how I build reliable, self-governing data infrastructure that executives can trust."*
 
 ---
 
@@ -27,7 +29,7 @@ When presenting this project in a portfolio review or technical screen, follow t
 
 ```mermaid
 flowchart LR
-    S1["1. The Domain Problem"] --> S2["2. Cryptographic Ingestion"]
+    S1["1. Client Problem & NDA"] --> S2["2. Cryptographic Ingestion"]
     S2 --> S3["3. Medallion dbt Modeling"]
     S3 --> S4["4. Zero-Variance Reconciliation"]
     S4 --> S5["5. Statistical Hypothesis Testing"]
@@ -35,9 +37,10 @@ flowchart LR
     S6 --> S7["7. Orchestration & CI/CD"]
 ```
 
-### Step 1: The Domain Problem (Indoor Agriculture Unit Economics)
-- **Context**: Commercial indoor mushroom cultivation is highly capital-intensive with volatile cash flows. Substrate blocks take weeks to colonize, electricity bills run high due to climate control, and fresh mushrooms lose weight rapidly through transpiration.
+### Step 1: The Freelance Client Problem & NDA Context
+- **The Client Engagement**: An urban indoor farm cultivating culinary and medicinal mushrooms (*Pearl Oyster*, *Lion's Mane*, *Shiitake*).
 - **The Challenge**: The farm had raw data on paper clipboards, order spreadsheets, and bank feeds, but couldn't answer fundamental questions: *What does it cost to grow 1 kg of Lion's Mane? Is Flush 3 profitable? Where is 166 kg of fresh harvest disappearing to?*
+- **The NDA & Re-Creation**: Proprietary commercial terms and farm yields are protected under NDA. I built a deterministic synthetic generator reflecting identical schema entities, biological efficiency distributions, and financial flows so that the entire transformation pipeline, dbt DAG, and Power BI models run 100% reproducibly.
 
 ### Step 2: The Ingestion & Cryptographic Deduplication Layer
 - **Technical Choice**: Built [`ingestion/raw_loader.py`](file:///d:/Mushroom%20Analytics/ingestion/raw_loader.py).
