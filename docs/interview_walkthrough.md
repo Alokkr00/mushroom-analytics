@@ -1,9 +1,9 @@
 # MycoMetrics: Technical Interview Defense Guide & Walkthrough Script
 
 **Document Version:** 1.0.0  
-**Target Roles:** Senior / Staff Data Engineer, Analytics Engineer, BI Architect  
+**Target Roles:** Modern Data Analyst, Junior-to-Mid Analytics Engineer, BI Developer  
 **Project:** FungiFlow Organics (`MycoMetrics`)  
-**Author:** Lead Analytics Engineer & Data Platform Architect  
+**Author:** Full-Lifecycle Data Analyst & Analytics Engineering Specialist  
 
 ---
 

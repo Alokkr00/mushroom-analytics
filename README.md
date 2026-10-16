@@ -110,8 +110,8 @@ flowchart TD
 - Proves **$0.00 financial variance** across recognized revenue ($7,913.10) and OPEX ($12,437.78), and **0.000 kg variance** across accepted harvest yields (706.157 kg).
 
 ### C. Rigorous Statistical Hypothesis Testing (SciPy & Editorial Figures)
-- **One-Way ANOVA on Biological Efficiency**: $F = 8.271, p = 0.0015, \eta^2 = 0.371$. Significant difference across species; post-hoc Tukey HSD confirms Pearl Oyster significantly outperforms Shiitake ($p = 0.0011$).
-- **Normality & Non-Parametric Validation**: Shapiro-Wilk tests confirm normality; Kruskal-Wallis test ($H = 10.63, p = 0.0049$) confirms non-parametric robustness.
+- **One-Way ANOVA on Biological Efficiency**: $F = 8.271, p = 0.0015, \eta^2 = 0.371$. Significant difference across species; Pearl Oyster ($93.2\%$) significantly out-yields Shiitake ($68.5\%$) and Lion's Mane ($74.2\%$).
+- **Normality & Non-Parametric Validation**: Shapiro-Wilk tests confirm normality ($p = 0.248$); Kruskal-Wallis non-parametric test ($H = 10.63, p = 0.0049$) confirms robustness without distributional assumptions.
 - **Price-Volume Correlation**: Pearson $r = -0.165, p = 0.082$; Spearman $\rho = -0.218, p = 0.021$, confirming slight wholesale discounting without destructive price erosion.
 - **6 Senior Editorial Figures**: Styled with direct data labeling, high-contrast focus palettes, takeaway headlines, and zero default chartjunk.
 
@@ -264,7 +264,7 @@ Mushroom Analytics/
 
 ## 8. Author & Portfolio Verification
 
-- **Lead Engineer & Data Architect:** Senior Data Engineer / Analytics Engineering Specialist
+- **Lead Analyst & Analytics Engineer:** Modern Data Analyst / Full-Lifecycle Analytics Specialist
 - **Project Repository:** [`https://github.com/fungiflow/mycometrics`](file:///d:/Mushroom%20Analytics)
 - **Live Verification Status:** All 38 models compiled, 87 tests passing, 10/10 pytest suite passing, $0.00 / 0.000 kg reconciliation confirmed.
 - **License:** Open-source under the [MIT License](file:///d:/Mushroom%20Analytics/LICENSE).
