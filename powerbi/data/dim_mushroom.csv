@@ -1,0 +1,4 @@
+mushroom_id,mushroom_common_name,scientific_name,substrate_formula,incubation_days_min,incubation_days_max,biological_efficiency_min,biological_efficiency_max,standard_shelf_life_days,spawn_rate_ratio
+MSH-01,Pearl Oyster,Pleurotus ostreatus,Pasteurized Wheat Straw + 10% Wheat Bran,18,22,0.75,1.1,5,0.1
+MSH-02,Lion's Mane,Hericium erinaceus,Supplemented Hardwood Sawdust (Master's Mix),24,30,0.6,0.85,7,0.1
+MSH-03,Shiitake,Lentinula edodes,Sterilized Supplemented Hardwood Sawdust,60,75,0.5,0.7,10,0.1

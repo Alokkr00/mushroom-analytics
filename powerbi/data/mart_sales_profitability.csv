@@ -1,0 +1,28 @@
+year_month,customer_segment,mushroom_common_name,sales_channel,total_orders_count,total_ordered_kg,total_fulfilled_kg,total_returned_kg,total_net_retained_kg,total_gross_revenue,total_discount_amount,total_net_revenue,total_credit_refund_amount,total_final_recognized_revenue,total_cogs_amount,total_gross_profit,gross_margin_pct,effective_asp_per_kg
+2024-05,Boutique Grocer,Pearl Oyster,Wholesale Direct,1,3.901,2.993,0.0,2.993,47.89,0.0,47.89,0.0,47.89,12.27,35.62,74.38,16.0
+2024-05,Restaurant,Pearl Oyster,Wholesale Direct,3,15.695,15.695,0.0,15.695,251.12,21.69,229.43,0.0,229.43,64.35,165.08,71.95,14.62
+2024-06,Boutique Grocer,Pearl Oyster,Wholesale Direct,8,44.827,36.138,0.0,36.138,578.2,0.0,578.2,0.0,578.2,148.17,430.03,74.37,16.0
+2024-06,Direct Consumer,Pearl Oyster,D2C,2,1.263,1.208,0.0,1.208,19.32,0.0,19.32,0.0,19.32,4.95,14.37,74.38,15.99
+2024-06,Restaurant,Pearl Oyster,Wholesale Direct,7,56.719,46.708,0.0,46.708,747.33,37.34,709.99,0.0,709.99,191.5,518.49,73.03,15.2
+2024-07,Boutique Grocer,Lion's Mane,Wholesale Direct,1,7.347,0.784,0.0,0.784,21.17,0.0,21.17,0.0,21.17,3.21,17.96,84.84,27.0
+2024-07,Boutique Grocer,Pearl Oyster,Wholesale Direct,1,11.596,6.857,0.0,6.857,109.72,0.0,109.72,0.0,109.72,28.11,81.61,74.38,16.0
+2024-07,Direct Consumer,Pearl Oyster,D2C,1,1.512,1.512,0.0,1.512,24.2,0.0,24.2,0.0,24.2,6.2,18.0,74.38,16.01
+2024-07,Farmers Market,Lion's Mane,Market Direct,1,0.634,0.634,0.0,0.634,17.12,0.0,17.12,0.0,17.12,2.6,14.52,84.81,27.0
+2024-07,Farmers Market,Pearl Oyster,Market Direct,1,1.49,1.49,0.0,1.49,23.84,0.0,23.84,0.0,23.84,6.11,17.73,74.37,16.0
+2024-07,Restaurant,Lion's Mane,Wholesale Direct,5,58.101,52.74,0.0,52.74,1423.98,89.59,1334.39,0.0,1334.39,216.24,1118.15,83.79,25.3
+2024-07,Restaurant,Pearl Oyster,Wholesale Direct,7,41.784,40.471,0.0,40.471,647.53,45.99,601.54,0.0,601.54,165.94,435.6,72.41,14.86
+2024-08,Boutique Grocer,Lion's Mane,Wholesale Direct,2,13.762,5.541,0.0,5.541,149.61,0.0,149.61,0.0,149.61,22.72,126.89,84.81,27.0
+2024-08,Direct Consumer,Lion's Mane,D2C,4,5.086,5.086,0.0,5.086,137.33,0.0,137.33,0.0,137.33,20.87,116.47,84.81,27.0
+2024-08,Direct Consumer,Pearl Oyster,D2C,1,1.302,1.302,0.284,1.018,20.83,0.0,20.83,4.54,16.29,5.34,10.95,67.22,12.51
+2024-08,Farmers Market,Lion's Mane,Market Direct,3,3.835,3.835,0.0,3.835,103.56,0.0,103.56,0.0,103.56,15.72,87.84,84.82,27.0
+2024-08,Restaurant,Lion's Mane,Wholesale Direct,6,48.363,36.207,0.0,36.207,977.58,61.43,916.15,0.0,916.15,148.44,767.71,83.8,25.3
+2024-09,Boutique Grocer,Pearl Oyster,Wholesale Direct,1,2.141,2.141,0.0,2.141,34.26,0.0,34.26,0.0,34.26,8.78,25.48,74.37,16.0
+2024-09,Boutique Grocer,Shiitake,Wholesale Direct,3,14.561,14.561,0.0,14.561,349.47,0.0,349.47,0.0,349.47,59.7,289.77,82.92,24.0
+2024-09,Direct Consumer,Shiitake,D2C,1,0.218,0.218,0.0,0.218,5.23,0.0,5.23,0.0,5.23,0.89,4.34,82.98,23.99
+2024-09,Restaurant,Pearl Oyster,Wholesale Direct,2,3.777,3.777,0.552,3.225,60.44,0.0,60.44,8.83,51.61,15.48,36.13,70.01,13.66
+2024-09,Restaurant,Shiitake,Wholesale Direct,1,9.509,7.055,2.637,4.418,169.32,8.98,160.34,63.29,97.05,28.93,68.12,70.19,13.76
+2024-10,Boutique Grocer,Shiitake,Wholesale Direct,4,38.209,36.56,0.0,36.56,877.42,0.0,877.42,0.0,877.42,149.9,727.52,82.92,24.0
+2024-10,Farmers Market,Pearl Oyster,Market Direct,2,1.328,1.328,0.0,1.328,21.25,0.0,21.25,0.0,21.25,5.45,15.81,74.4,16.0
+2024-10,Farmers Market,Shiitake,Market Direct,4,3.011,3.011,0.0,3.011,72.27,0.0,72.27,0.0,72.27,12.35,59.92,82.91,24.0
+2024-10,Restaurant,Pearl Oyster,Wholesale Direct,4,18.042,18.042,0.0,18.042,288.67,17.47,271.2,0.0,271.2,73.98,197.22,72.72,15.03
+2024-10,Restaurant,Shiitake,Wholesale Direct,6,62.295,47.414,0.0,47.414,1137.94,44.35,1093.59,0.0,1093.59,194.39,899.2,82.22,23.06

@@ -1,0 +1,6 @@
+location_id,location_name,max_capacity_blocks,is_temperature_controlled
+LOC-01,Grow Room A,200,True
+LOC-02,Grow Room B,200,True
+LOC-03,Incubation Darkroom,400,True
+LOC-04,Walk-in Chiller,0,True
+LOC-05,Substrate Prep Area,0,False

@@ -1,0 +1,13 @@
+year_month,mushroom_common_name,batches_started,contaminated_batches_count,total_blocks_inoculated,total_dry_substrate_kg,total_gross_yield_kg,total_accepted_yield_kg,total_rejected_yield_kg,avg_biological_efficiency_pct,avg_rejection_rate_pct,avg_cycle_duration_days,avg_direct_cost_per_kg
+2024-05,Pearl Oyster,4,0.0,165.0,165.0,149.68,143.519,6.161,85.21,3.68,34.8,3.04
+2024-06,Lion's Mane,4,0.0,161.0,161.0,113.982,108.452,5.53,66.81,4.8,48.5,3.64
+2024-06,Pearl Oyster,3,0.0,135.0,135.0,134.519,127.957,6.562,93.25,5.04,37.0,2.53
+2024-07,Lion's Mane,1,0.0,26.0,26.0,18.437,17.221,1.216,66.23,6.6,55.0,3.66
+2024-07,Shiitake,5,0.0,190.0,190.0,122.705,118.633,4.072,62.1,3.32,88.2,4.06
+2024-08,Pearl Oyster,3,0.0,113.0,113.0,114.286,108.383,5.903,96.98,5.18,38.0,2.54
+2024-08,Shiitake,3,0.0,108.0,108.0,32.994,31.804,1.19,27.53,2.36,70.0,5.83
+2024-09,Lion's Mane,1,0.0,45.0,45.0,25.166,24.384,0.782,54.19,3.11,39.0,4.94
+2024-09,Pearl Oyster,1,0.0,29.0,29.0,27.257,25.804,1.453,88.98,5.33,39.0,2.65
+2024-09,Shiitake,3,0.0,147.0,147.0,0.0,0.0,0.0,0.0,0.0,,
+2024-10,Lion's Mane,2,0.0,82.0,82.0,0.0,0.0,0.0,0.0,0.0,,
+2024-10,Pearl Oyster,1,0.0,29.0,29.0,0.0,0.0,0.0,0.0,0.0,,

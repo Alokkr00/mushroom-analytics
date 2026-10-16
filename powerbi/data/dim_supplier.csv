@@ -1,0 +1,11 @@
+supplier_id,supplier_name,material_category,lead_days_min,lead_days_max,payment_terms_days
+SUP-01,MycoSpawn Labs,Grain Spawn,3,6,30
+SUP-02,AgroStraw Direct,Substrate,1,3,14
+SUP-03,HardWood Pellets Co.,Substrate,2,5,14
+SUP-04,SoyHull Agri Supplies,Substrate,3,7,30
+SUP-05,ClearPack Solutions,Packaging,2,4,14
+SUP-06,FilterBag Supply Co.,Packaging,3,6,14
+SUP-07,City Power & Utilities,Utilities,0,0,30
+SUP-08,Green Facility Leasing,Rent,0,0,30
+SUP-09,CleanPro Hygiene Dist.,Hygiene & Consumables,2,3,14
+SUP-10,FreshRoute Courier,Transport,0,0,7

@@ -1,0 +1,15 @@
+category_id,category_name,cost_behavior,financial_statement_section
+EXP-01,Grain Spawn Purchase,Direct Production,COGS
+EXP-02,Substrate Materials,Direct Production,COGS
+EXP-03,Filter Patch Bags,Direct Production,COGS
+EXP-04,Direct Harvest Labor,Direct Production,COGS
+EXP-05,Packaging Materials,Variable Operating,Operating Expense
+EXP-06,Hygiene & Sanitization,Variable Operating,Operating Expense
+EXP-07,Local Delivery & Fuel,Variable Operating,Operating Expense
+EXP-08,Electricity,Fixed Overhead,Operating Expense
+EXP-09,Water & Utilities,Fixed Overhead,Operating Expense
+EXP-10,Facility Rent,Fixed Overhead,Operating Expense
+EXP-11,Equipment Maintenance,Fixed Overhead,Operating Expense
+EXP-12,Business Insurance,Fixed Overhead,Operating Expense
+EXP-13,Marketing & Market Fees,Variable Operating,Operating Expense
+EXP-14,Miscellaneous Admin,Fixed Overhead,Operating Expense

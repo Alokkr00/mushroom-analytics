@@ -1,0 +1,257 @@
+/* ==============================================================================
+   MycoMetrics - Production DAX Measure Library
+   Organization: FungiFlow Organics Analytics Warehouse
+   Classification: Display Folders & Measure Table [_Measures]
+============================================================================== */
+
+// ------------------------------------------------------------------------------
+// FOLDER: 01_Sales_and_Revenue
+// ------------------------------------------------------------------------------
+
+[Total Ordered Quantity kg] = 
+SUM('fact_sales'[quantity_ordered_kg])
+// Description: Total gross customer order demand in kilograms.
+// Format: #,##0.00 "kg"
+
+[Total Fulfilled Quantity kg] = 
+SUM('fact_sales'[quantity_fulfilled_kg])
+// Description: Actual shipped and fulfilled product weight in kilograms.
+// Format: #,##0.00 "kg"
+
+[Fulfillment Rate %] = 
+DIVIDE([Total Fulfilled Quantity kg], [Total Ordered Quantity kg], 1.0)
+// Description: Order fulfillment completeness percentage.
+// Format: 0.0%
+
+[Gross Invoiced Revenue] = 
+SUM('fact_sales'[gross_revenue])
+// Description: Pre-discount gross invoice amount.
+// Format: $#,##0.00
+
+[Promotional Discounts] = 
+SUM('fact_sales'[discount_amount])
+// Description: Promotional and volume concession discounts granted.
+// Format: $#,##0.00
+
+[Credit Refunds] = 
+SUM('fact_sales'[credit_refund_amount])
+// Description: Post-delivery credit adjustments issued for transit damage or excess ordering.
+// Format: $#,##0.00
+
+[Net Recognized Revenue] = 
+SUM('fact_sales'[final_recognized_revenue])
+// Description: GAAP/IFRS compliant net recognized sales revenue after all discounts and credits.
+// Format: $#,##0.00
+
+[Realized ASP per kg] = 
+DIVIDE([Net Recognized Revenue], [Total Fulfilled Quantity kg], 0.00)
+// Description: Effective Average Selling Price per fulfilled kilogram.
+// Format: $#,##0.00
+
+[Total Orders Count] = 
+DISTINCTCOUNT('fact_sales'[order_id])
+// Description: Total unique sales orders completed.
+// Format: #,##0
+
+[Average Order Value AOV] = 
+DIVIDE([Net Recognized Revenue], [Total Orders Count], 0.00)
+// Description: Average recognized dollar revenue per customer order.
+// Format: $#,##0.00
+
+
+// ------------------------------------------------------------------------------
+// FOLDER: 02_Cost_and_Profitability
+// ------------------------------------------------------------------------------
+
+[Total Cost of Goods Sold COGS] = 
+SUM('fact_sales'[estimated_cogs_amount])
+// Description: Direct batch cultivation material costs allocated to fulfilled sales.
+// Format: $#,##0.00
+
+[Gross Profit] = 
+[Net Recognized Revenue] - [Total Cost of Goods Sold COGS]
+// Description: Dollar margin available to cover facility operating overhead.
+// Format: $#,##0.00
+
+[Gross Margin %] = 
+DIVIDE([Gross Profit], [Net Recognized Revenue], 0.0)
+// Description: Gross profit margin percentage.
+// Format: 0.0%
+
+[Total Operating Expenses OPEX] = 
+SUM('fact_expenses'[amount])
+// Description: Total overhead operating expenses (rent, electricity, labor, insurance).
+// Format: $#,##0.00
+
+[Net Operating Result] = 
+[Gross Profit] - [Total Operating Expenses OPEX]
+// Description: Startup monthly EBITDA proxy (Gross Profit minus cash OPEX).
+// Format: $#,##0.00
+
+[Operating Margin %] = 
+DIVIDE([Net Operating Result], [Net Recognized Revenue], 0.0)
+// Description: Net operating profit margin percentage on sales revenue.
+// Format: 0.0%
+
+[Contribution Margin per kg] = 
+DIVIDE([Gross Profit], [Total Fulfilled Quantity kg], 0.00)
+// Description: Dollar gross profit generated per delivered kilogram.
+// Format: $#,##0.00
+
+
+// ------------------------------------------------------------------------------
+// FOLDER: 03_Cultivation_and_Yield
+// ------------------------------------------------------------------------------
+
+[Batches Inoculated] = 
+DISTINCTCOUNT('fact_production_batches'[batch_id])
+// Description: Count of distinct substrate inoculation batches started.
+// Format: #,##0
+
+[Dry Substrate Mass kg] = 
+SUM('fact_production_batches'[dry_substrate_kg])
+// Description: Total dry base substrate weight prepared in kilograms.
+// Format: #,##0.0 "kg"
+
+[Gross Harvested Yield kg] = 
+SUM('fact_harvest'[gross_harvested_kg])
+// Description: Raw harvested fresh mushroom biomass cut from blocks.
+// Format: #,##0.00 "kg"
+
+[Accepted Harvest Yield kg] = 
+SUM('fact_harvest'[accepted_weight_kg])
+// Description: Marketable fresh crop passing quality inspection.
+// Format: #,##0.00 "kg"
+
+[Rejected Harvest Weight kg] = 
+SUM('fact_harvest'[rejected_weight_kg])
+// Description: Fresh mushroom weight culled on harvest floor due to contamination/blotch.
+// Format: #,##0.00 "kg"
+
+[Rejection Rate %] = 
+DIVIDE([Rejected Harvest Weight kg], [Gross Harvested Yield kg], 0.0)
+// Description: Harvest floor cull rate percentage.
+// Format: 0.0%
+
+[Biological Efficiency %] = 
+DIVIDE([Accepted Harvest Yield kg], [Dry Substrate Mass kg], 0.0)
+// Description: Biological Efficiency = (Accepted Fresh Yield kg / Dry Substrate kg).
+// Format: 0.0%
+
+[Target Biological Efficiency %] = 
+AVERAGE('dim_mushroom'[biological_efficiency_target_pct])
+// Description: Benchmark target Biological Efficiency by variety from literature.
+// Format: 0.0%
+
+[Biological Efficiency Gap %] = 
+[Biological Efficiency %] - [Target Biological Efficiency %]
+// Description: Variance against biological benchmark target (+/-).
+// Format: +0.0%;-0.0%;0.0%
+
+[Average Cycle Duration Days] = 
+AVERAGE('fact_production_batches'[cycle_duration_days])
+// Description: Average incubation and fruiting duration from inoculation to final flush.
+// Format: 0.0 "days"
+
+[Yield per Block kg] = 
+DIVIDE([Accepted Harvest Yield kg], SUM('fact_production_batches'[planned_blocks_count]), 0.00)
+// Description: Average accepted kilograms harvested per cultivated fruiting block.
+// Format: 0.00 "kg/block"
+
+
+// ------------------------------------------------------------------------------
+// FOLDER: 04_Inventory_and_Shrinkage
+// ------------------------------------------------------------------------------
+
+[Total Loss Incidents] = 
+SUM('mart_inventory_waste'[loss_incidents_count])
+// Description: Total recorded shrinkage and discard events.
+// Format: #,##0
+
+[Total Lost Quantity kg] = 
+SUM('mart_inventory_waste'[total_lost_quantity_kg])
+// Description: Total physical crop biomass lost across all 3 supply chain stages.
+// Format: #,##0.00 "kg"
+
+[Total Financial Loss $] = 
+SUM('mart_inventory_waste'[total_estimated_loss_amount])
+// Description: Total financial loss value attributed to spoilage and culled crop.
+// Format: $#,##0.00
+
+[Cold Storage Spoilage kg] = 
+CALCULATE(
+    SUM('mart_inventory_waste'[total_lost_quantity_kg]),
+    'mart_inventory_waste'[loss_stage] = "COLD_STORAGE_SPOILAGE"
+)
+// Description: Inventory spoiled in the walk-in cooler past shelf life.
+// Format: #,##0.00 "kg"
+
+[Harvest Floor Rejections kg] = 
+CALCULATE(
+    SUM('mart_inventory_waste'[total_lost_quantity_kg]),
+    'mart_inventory_waste'[loss_stage] = "HARVEST_FLOOR_REJECTION"
+)
+// Description: Culled yield during harvesting flushes.
+// Format: #,##0.00 "kg"
+
+[Customer Returns kg] = 
+CALCULATE(
+    SUM('mart_inventory_waste'[total_lost_quantity_kg]),
+    'mart_inventory_waste'[loss_stage] = "CUSTOMER_DELIVERY_RETURN"
+)
+// Description: Deliveries returned or credited due to transit defects.
+// Format: #,##0.00 "kg"
+
+[Overall Shrinkage Rate %] = 
+DIVIDE([Total Lost Quantity kg], [Gross Harvested Yield kg], 0.0)
+// Description: Biomass loss percentage relative to total farm gross harvest.
+// Format: 0.0%
+
+
+// ------------------------------------------------------------------------------
+// FOLDER: 05_Time_Intelligence
+// ------------------------------------------------------------------------------
+
+[Revenue Prior Month PM] = 
+CALCULATE(
+    [Net Recognized Revenue],
+    DATEADD('dim_date'[date_key], -1, MONTH)
+)
+// Description: Net revenue from the identical calendar period in the previous month.
+// Format: $#,##0.00
+
+[Revenue MoM Growth $] = 
+[Net Recognized Revenue] - [Revenue Prior Month PM]
+// Description: Dollar variance in recognized revenue Month-over-Month.
+// Format: +$#,##0.00;-$#,##0.00;$0.00
+
+[Revenue MoM Growth %] = 
+DIVIDE([Revenue MoM Growth $], [Revenue Prior Month PM], 0.0)
+// Description: Percentage growth in recognized revenue Month-over-Month.
+// Format: +0.0%;-0.0%;0.0%
+
+[Revenue YTD] = 
+TOTALYTD([Net Recognized Revenue], 'dim_date'[date_key])
+// Description: Cumulative Year-To-Date recognized revenue.
+// Format: $#,##0.00
+
+[Yield Prior Month PM] = 
+CALCULATE(
+    [Accepted Harvest Yield kg],
+    DATEADD('dim_date'[date_key], -1, MONTH)
+)
+// Description: Accepted harvest weight in the prior month.
+// Format: #,##0.00 "kg"
+
+[Yield MoM Growth %] = 
+DIVIDE([Accepted Harvest Yield kg] - [Yield Prior Month PM], [Yield Prior Month PM], 0.0)
+// Description: Percentage growth in accepted harvest yield Month-over-Month.
+// Format: +0.0%;-0.0%;0.0%
+
+[Rolling 30D Revenue] = 
+CALCULATE(
+    [Net Recognized Revenue],
+    DATESINPERIOD('dim_date'[date_key], MAX('dim_date'[date_key]), -30, DAY)
+)
+// Description: Trailing 30-day recognized sales revenue.
+// Format: $#,##0.00

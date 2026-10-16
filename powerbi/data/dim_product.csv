@@ -1,0 +1,14 @@
+product_id,sku_code,product_name,mushroom_id,mushroom_common_name,package_format,unit_weight_kg,quality_grade,standard_selling_price,is_active
+PRD-001,MSH-01-WHL-01KG,Pearl Oyster Bulk Wholesale Crate 1 kg,MSH-01,Pearl Oyster,Bulk Crate,1.0,Grade A,16.0,True
+PRD-002,MSH-01-WHL-05KG,Pearl Oyster Bulk Wholesale Crate 5 kg,MSH-01,Pearl Oyster,Bulk Crate,5.0,Grade A,15.0,True
+PRD-003,MSH-01-RTL-250G,Pearl Oyster Retail Clamshell 250 g,MSH-01,Pearl Oyster,Clamshell Punnet,0.25,Grade A,5.0,True
+PRD-004,MSH-01-MKT-150G,Pearl Oyster Farmers Market Bag 150 g,MSH-01,Pearl Oyster,Kraft Paper Bag,0.15,Grade A,3.5,True
+PRD-005,MSH-01-SEC-01KG,Pearl Oyster Kitchen Seconds 1 kg,MSH-01,Pearl Oyster,Bulk Crate,1.0,Grade B,10.5,True
+PRD-006,MSH-02-WHL-01KG,Lion's Mane Bulk Wholesale Crate 1 kg,MSH-02,Lion's Mane,Bulk Crate,1.0,Grade A,27.0,True
+PRD-007,MSH-02-RTL-200G,Lion's Mane Retail Clamshell 200 g,MSH-02,Lion's Mane,Clamshell Punnet,0.2,Grade A,6.5,True
+PRD-008,MSH-02-MKT-150G,Lion's Mane Farmers Market Bag 150 g,MSH-02,Lion's Mane,Kraft Paper Bag,0.15,Grade A,5.0,True
+PRD-009,MSH-03-WHL-01KG,Shiitake Bulk Wholesale Crate 1 kg,MSH-03,Shiitake,Bulk Crate,1.0,Grade A,24.0,True
+PRD-010,MSH-03-WHL-02KG,Shiitake Bulk Wholesale Crate 2 kg,MSH-03,Shiitake,Bulk Crate,2.0,Grade A,23.0,True
+PRD-011,MSH-03-RTL-200G,Shiitake Retail Clamshell 200 g,MSH-03,Shiitake,Clamshell Punnet,0.2,Grade A,5.5,True
+PRD-012,MSH-03-DRY-100G,Shiitake Dried 100 g Retail Bag,MSH-03,Shiitake,Dried Retail Bag,0.1,Grade A,8.0,True
+PRD-013,MSH-03-SEC-01KG,Shiitake Kitchen Seconds 1 kg,MSH-03,Shiitake,Bulk Crate,1.0,Grade B,16.0,True

@@ -1,0 +1,348 @@
+[
+  {
+    "table_name": "dim_date",
+    "row_count": 214,
+    "columns": [
+      "date_key",
+      "calendar_date",
+      "day_of_month",
+      "day_of_week_num",
+      "day_of_week_name",
+      "is_weekend",
+      "week_of_year",
+      "month_number",
+      "month_name",
+      "year_month",
+      "quarter_number",
+      "year_number"
+    ],
+    "file_path": "powerbi/data\\dim_date.csv"
+  },
+  {
+    "table_name": "dim_mushroom",
+    "row_count": 3,
+    "columns": [
+      "mushroom_id",
+      "mushroom_common_name",
+      "scientific_name",
+      "substrate_formula",
+      "incubation_days_min",
+      "incubation_days_max",
+      "biological_efficiency_min",
+      "biological_efficiency_max",
+      "standard_shelf_life_days",
+      "spawn_rate_ratio"
+    ],
+    "file_path": "powerbi/data\\dim_mushroom.csv"
+  },
+  {
+    "table_name": "dim_product",
+    "row_count": 13,
+    "columns": [
+      "product_id",
+      "sku_code",
+      "product_name",
+      "mushroom_id",
+      "mushroom_common_name",
+      "package_format",
+      "unit_weight_kg",
+      "quality_grade",
+      "standard_selling_price",
+      "is_active"
+    ],
+    "file_path": "powerbi/data\\dim_product.csv"
+  },
+  {
+    "table_name": "dim_customer",
+    "row_count": 20,
+    "columns": [
+      "customer_id",
+      "customer_name",
+      "customer_segment",
+      "delivery_route_zone",
+      "payment_terms_days",
+      "preferred_variety_id",
+      "acquisition_date",
+      "is_active",
+      "total_completed_orders",
+      "lifetime_net_revenue",
+      "lifetime_fulfilled_kg",
+      "average_order_value",
+      "is_repeat_customer",
+      "customer_tenure_days"
+    ],
+    "file_path": "powerbi/data\\dim_customer.csv"
+  },
+  {
+    "table_name": "dim_supplier",
+    "row_count": 10,
+    "columns": [
+      "supplier_id",
+      "supplier_name",
+      "material_category",
+      "lead_days_min",
+      "lead_days_max",
+      "payment_terms_days"
+    ],
+    "file_path": "powerbi/data\\dim_supplier.csv"
+  },
+  {
+    "table_name": "dim_expense_category",
+    "row_count": 14,
+    "columns": [
+      "category_id",
+      "category_name",
+      "cost_behavior",
+      "financial_statement_section"
+    ],
+    "file_path": "powerbi/data\\dim_expense_category.csv"
+  },
+  {
+    "table_name": "dim_location",
+    "row_count": 5,
+    "columns": [
+      "location_id",
+      "location_name",
+      "max_capacity_blocks",
+      "is_temperature_controlled"
+    ],
+    "file_path": "powerbi/data\\dim_location.csv"
+  },
+  {
+    "table_name": "fact_production_batches",
+    "row_count": 31,
+    "columns": [
+      "batch_id",
+      "mushroom_id",
+      "location_id",
+      "batch_start_date",
+      "transfer_to_fruiting_date",
+      "first_harvest_date",
+      "last_harvest_date",
+      "planned_blocks_count",
+      "dry_substrate_kg",
+      "spawn_kg",
+      "target_yield_kg",
+      "direct_material_cost",
+      "total_flushes_recorded",
+      "total_gross_harvested_kg",
+      "total_accepted_harvest_kg",
+      "total_rejected_harvest_kg",
+      "total_harvest_labor_hours",
+      "rejection_rate_pct",
+      "biological_efficiency_pct",
+      "target_achievement_pct",
+      "cycle_duration_days",
+      "direct_material_cost_per_kg",
+      "batch_status",
+      "is_stress_event"
+    ],
+    "file_path": "powerbi/data\\fact_production_batches.csv"
+  },
+  {
+    "table_name": "fact_harvest",
+    "row_count": 45,
+    "columns": [
+      "harvest_id",
+      "batch_id",
+      "mushroom_id",
+      "location_id",
+      "harvest_date",
+      "flush_number",
+      "gross_harvested_kg",
+      "accepted_weight_kg",
+      "rejected_weight_kg",
+      "rejection_rate_pct",
+      "rejection_reason",
+      "labor_hours"
+    ],
+    "file_path": "powerbi/data\\fact_harvest.csv"
+  },
+  {
+    "table_name": "fact_sales",
+    "row_count": 112,
+    "columns": [
+      "order_line_id",
+      "order_id",
+      "customer_id",
+      "product_id",
+      "mushroom_id",
+      "lot_id",
+      "order_date",
+      "requested_delivery_date",
+      "actual_delivery_date",
+      "sales_channel",
+      "order_status",
+      "payment_status",
+      "quantity_ordered_kg",
+      "quantity_fulfilled_kg",
+      "returned_kg",
+      "net_retained_quantity_kg",
+      "fulfillment_rate_pct",
+      "unit_selling_price",
+      "gross_revenue",
+      "discount_amount",
+      "net_revenue",
+      "credit_refund_amount",
+      "final_recognized_revenue",
+      "estimated_cogs_amount",
+      "gross_profit_amount",
+      "gross_margin_pct"
+    ],
+    "file_path": "powerbi/data\\fact_sales.csv"
+  },
+  {
+    "table_name": "fact_inventory_movements",
+    "row_count": 176,
+    "columns": [
+      "movement_id",
+      "lot_id",
+      "product_id",
+      "mushroom_id",
+      "batch_id",
+      "harvest_id",
+      "movement_date",
+      "movement_type",
+      "signed_quantity_kg",
+      "unit_cost",
+      "total_movement_value",
+      "expiry_date",
+      "reason",
+      "reference_transaction_id"
+    ],
+    "file_path": "powerbi/data\\fact_inventory_movements.csv"
+  },
+  {
+    "table_name": "fact_expenses",
+    "row_count": 51,
+    "columns": [
+      "expense_id",
+      "expense_date",
+      "category_id",
+      "supplier_id",
+      "batch_id",
+      "description",
+      "amount",
+      "currency",
+      "allocation_method"
+    ],
+    "file_path": "powerbi/data\\fact_expenses.csv"
+  },
+  {
+    "table_name": "fact_procurement",
+    "row_count": 35,
+    "columns": [
+      "purchase_id",
+      "supplier_id",
+      "purchase_date",
+      "delivery_date",
+      "material_name",
+      "unit_of_measure",
+      "quantity_ordered",
+      "quantity_received",
+      "unit_price",
+      "total_cost",
+      "payment_status",
+      "supplier_lead_time_days"
+    ],
+    "file_path": "powerbi/data\\fact_procurement.csv"
+  },
+  {
+    "table_name": "mart_business_overview",
+    "row_count": 6,
+    "columns": [
+      "year_month",
+      "net_sales_revenue",
+      "cost_of_goods_sold",
+      "gross_profit",
+      "gross_margin_pct",
+      "operating_expenses",
+      "operating_result",
+      "total_accepted_harvest_kg",
+      "total_sales_fulfilled_kg"
+    ],
+    "file_path": "powerbi/data\\mart_business_overview.csv"
+  },
+  {
+    "table_name": "mart_production_performance",
+    "row_count": 12,
+    "columns": [
+      "year_month",
+      "mushroom_common_name",
+      "batches_started",
+      "contaminated_batches_count",
+      "total_blocks_inoculated",
+      "total_dry_substrate_kg",
+      "total_gross_yield_kg",
+      "total_accepted_yield_kg",
+      "total_rejected_yield_kg",
+      "avg_biological_efficiency_pct",
+      "avg_rejection_rate_pct",
+      "avg_cycle_duration_days",
+      "avg_direct_cost_per_kg"
+    ],
+    "file_path": "powerbi/data\\mart_production_performance.csv"
+  },
+  {
+    "table_name": "mart_sales_profitability",
+    "row_count": 27,
+    "columns": [
+      "year_month",
+      "customer_segment",
+      "mushroom_common_name",
+      "sales_channel",
+      "total_orders_count",
+      "total_ordered_kg",
+      "total_fulfilled_kg",
+      "total_returned_kg",
+      "total_net_retained_kg",
+      "total_gross_revenue",
+      "total_discount_amount",
+      "total_net_revenue",
+      "total_credit_refund_amount",
+      "total_final_recognized_revenue",
+      "total_cogs_amount",
+      "total_gross_profit",
+      "gross_margin_pct",
+      "effective_asp_per_kg"
+    ],
+    "file_path": "powerbi/data\\mart_sales_profitability.csv"
+  },
+  {
+    "table_name": "mart_inventory_waste",
+    "row_count": 43,
+    "columns": [
+      "year_month",
+      "loss_stage",
+      "mushroom_common_name",
+      "reason_code",
+      "loss_incidents_count",
+      "total_lost_quantity_kg",
+      "total_estimated_loss_amount"
+    ],
+    "file_path": "powerbi/data\\mart_inventory_waste.csv"
+  },
+  {
+    "table_name": "mart_customer_analysis",
+    "row_count": 20,
+    "columns": [
+      "customer_id",
+      "customer_name",
+      "customer_segment",
+      "delivery_route_zone",
+      "acquisition_date",
+      "is_active",
+      "is_repeat_customer",
+      "customer_tenure_days",
+      "total_completed_orders",
+      "lifetime_fulfilled_kg",
+      "average_order_value",
+      "lifetime_net_revenue",
+      "pct_of_total_revenue",
+      "cumulative_revenue_pct",
+      "customer_revenue_rank",
+      "pareto_tier"
+    ],
+    "file_path": "powerbi/data\\mart_customer_analysis.csv"
+  }
+]
