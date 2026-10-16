@@ -43,14 +43,14 @@ flowchart LR
 - **The NDA & Re-Creation**: Proprietary commercial terms and farm yields are protected under NDA. I built a deterministic synthetic generator reflecting identical schema entities, biological efficiency distributions, and financial flows so that the entire transformation pipeline, dbt DAG, and Power BI models run 100% reproducibly.
 
 ### Step 2: The Ingestion & Cryptographic Deduplication Layer
-- **Technical Choice**: Built [`ingestion/raw_loader.py`](file:///d:/Mushroom%20Analytics/ingestion/raw_loader.py).
+- **Technical Choice**: Built [`ingestion/raw_loader.py`](../ingestion/raw_loader.py).
 - **Core Feature**: Generated an immutable metadata envelope for every row:
   $$\text{Envelope} = \{\text{\_source\_file}, \text{\_ingested\_at}, \text{\_ingestion\_run\_id}, \text{\_row\_fingerprint}\}$$
 - The `_row_fingerprint` is a SHA-256 hash across all natural non-technical attributes. Running the loader incrementally against unchanged files inserts **exactly 0 duplicate rows**, achieving complete idempotency.
 - Anomaly quarantine: Non-fatal anomalies (like intentional duplicate primary keys) are routed to `audit.data_quality_issues` without halting the entire pipeline.
 
 ### Step 3: dbt Modeling & Dimensional Design
-- **Architecture**: Structured 38 models across the Kimball dimensional lifecycle inside [`dbt_project/`](file:///d:/Mushroom%20Analytics/dbt_project):
+- **Architecture**: Structured 38 models across the Kimball dimensional lifecycle inside [`dbt_project/`](../dbt_project):
   - *Staging (15 views)*: Standardized column naming, data type casting, and string trimming.
   - *Intermediate (5 views)*: Complex business calculations (aggregating flush yields to batch grain, computing net revenue after returns and credit memos).
   - *Conformed Dimensions (7 models)*: Date, Mushroom, Product, Customer, Supplier, Expense Category, Location.
@@ -60,14 +60,14 @@ flowchart LR
 
 ### Step 4: The Multi-Tier Reconciliation Gate
 - **Engineering Rigor**: In production finance, analytical marts often diverge from raw invoices due to poorly scoped `LEFT JOIN`s or unhandled return credits.
-- **Solution**: Built [`sql/reconciliation/financial_reconciliation.sql`](file:///d:/Mushroom%20Analytics/sql/reconciliation/financial_reconciliation.sql).
+- **Solution**: Built [`sql/reconciliation/financial_reconciliation.sql`](../sql/reconciliation/financial_reconciliation.sql).
 - The script executes programmatic cross-tier validations asserting:
   1. *Revenue*: Raw Invoiced Net (\$9,754.77) - Credits (\$76.66) = Fact Recognized Revenue (\$7,913.10) = Mart Recognized Revenue (\$7,913.10). **Variance: $0.00**.
   2. *Harvest Biomass*: Raw Accepted Harvest (706.157 kg) = Fact Harvest (706.157 kg) = Mart Harvest (706.157 kg). **Variance: 0.000 kg**.
   3. *Operating Expenses*: Raw OPEX (\$12,437.78) = Fact OPEX (\$12,437.78) = Mart OPEX (\$12,437.78). **Variance: $0.00**.
 
 ### Step 5: Statistical Rigor & Scientific EDA (SciPy)
-- **Moving Beyond Descriptive Stats**: Rather than assuming species yields are different, ran formal hypothesis testing in [`scripts/run_statistical_eda.py`](file:///d:/Mushroom%20Analytics/scripts/run_statistical_eda.py):
+- **Moving Beyond Descriptive Stats**: Rather than assuming species yields are different, ran formal hypothesis testing in [`scripts/run_statistical_eda.py`](../scripts/run_statistical_eda.py):
   - **One-Way ANOVA on Biological Efficiency**: $F = 8.271, p = 0.0015, \eta^2 = 0.371$. Proved statistically significant variation between varieties.
   - **Normality Validation**: Shapiro-Wilk ($W = 0.957, p = 0.248$) confirmed normality; post-hoc Tukey HSD proved Pearl Oyster significantly outperforms Shiitake ($p = 0.0011$).
   - **Non-Parametric Safeguard**: Kruskal-Wallis test ($H = 10.63, p = 0.0049$) verified findings without relying on distributional assumptions.
@@ -75,16 +75,16 @@ flowchart LR
 - Visualizations: 6 publication-grade editorial figures adhering to Swiss information design principles (direct labeling, contextual subtitles, zero chartjunk).
 
 ### Step 6: Strategic Business Turnaround (+$10,657/yr)
-- Formulated eight comprehensive case studies in [`case_studies/`](file:///d:/Mushroom%20Analytics/case_studies) synthesized into an [`docs/executive_decision_matrix.md`](file:///d:/Mushroom%20Analytics/docs/executive_decision_matrix.md):
+- Formulated eight comprehensive case studies in [`case_studies/`](../case_studies) synthesized into an [`docs/executive_decision_matrix.md`](executive_decision_matrix.md):
   1. *Early Flush Termination*: Flush 3 yield collapses by 78.4%. Terminating at Flush 2 reclaims 16.4 fruiting days, accelerating chamber turnover by +28.8% (+$4,212/yr).
   2. *Cold Storage Shrinkage*: Cold storage desiccation accounts for 78.1% of loss (129.9 kg). Investing $450 in ultrasonic misting and FIFO color-coding recovers +$1,948/yr (payback in 2.8 months).
   3. *Retail Packaging Shift*: Shift 25% of wholesale volume into 200g punnets, capturing a +$14.20/kg margin premium (+$2,641/yr).
   4. *Customer Credit Control*: Enforcing 14-day terms on late-paying accounts (CUS-003, CUS-007) unlocks $1,340 in locked working capital.
 
 ### Step 7: Automation, Orchestration & CI/CD
-- **Master Runner**: [`scripts/run_pipeline.py`](file:///d:/Mushroom%20Analytics/scripts/run_pipeline.py) provides unified CLI management (`--stage`, `--dry-run`, `--full-refresh`, `--json`).
-- **CI/CD Quality Gate**: [`.github/workflows/data_pipeline.yml`](file:///d:/Mushroom%20Analytics/.github/workflows/data_pipeline.yml) executes on every PR: runs unit tests, ingests data, builds dbt models, executes 87 dbt assertions, and tests zero-variance reconciliation.
-- **Alerting Engine**: [`orchestration/alerting.py`](file:///d:/Mushroom%20Analytics/orchestration/alerting.py) generates Slack Block Kit and MS Teams Adaptive Card v1.4 payloads with local audit JSON persistence.
+- **Master Runner**: [`scripts/run_pipeline.py`](../scripts/run_pipeline.py) provides unified CLI management (`--stage`, `--dry-run`, `--full-refresh`, `--json`).
+- **CI/CD Quality Gate**: [`.github/workflows/data_pipeline.yml`](../.github/workflows/data_pipeline.yml) executes on every PR: runs unit tests, ingests data, builds dbt models, executes 87 dbt assertions, and tests zero-variance reconciliation.
+- **Alerting Engine**: [`orchestration/alerting.py`](../orchestration/alerting.py) generates Slack Block Kit and MS Teams Adaptive Card v1.4 payloads with local audit JSON persistence.
 
 ---
 
@@ -102,14 +102,14 @@ flowchart LR
 
 ### Q2: "How do you guarantee idempotency in your ingestion engine?"
 **Model Answer:**
-> *"Idempotency means running a pipeline multiple times on the same input produces the exact same state without unintended side effects. In [`ingestion/raw_loader.py`](file:///d:/Mushroom%20Analytics/ingestion/raw_loader.py), I enforce this cryptographically:
+> *"Idempotency means running a pipeline multiple times on the same input produces the exact same state without unintended side effects. In [`ingestion/raw_loader.py`](../ingestion/raw_loader.py), I enforce this cryptographically:
 > 
 > 1. When a source batch is extracted, I compute a SHA-256 hash across all non-technical row values (`_row_fingerprint`).
 > 2. During incremental ingestion, the loader performs an anti-join against existing fingerprints in the raw table.
 > 3. If a file is re-ingested without changes, 100% of rows match existing fingerprints, and exactly 0 rows are inserted.
 > 4. If a duplicate primary key arrives with modified attribute values, the loader identifies it as a collision and logs the discrepancy into `audit.data_quality_issues` for investigation rather than corrupting the warehouse.
 > 
-> This is verified in our automated unit tests ([`tests/unit/test_ingestion.py`](file:///d:/Mushroom%20Analytics/tests/unit/test_ingestion.py)), where re-running the loader immediately after a full load confirms zero duplicate records."*
+> This is verified in our automated unit tests ([`tests/unit/test_ingestion.py`](../tests/unit/test_ingestion.py)), where re-running the loader immediately after a full load confirms zero duplicate records."*
 
 ---
 
@@ -117,7 +117,7 @@ flowchart LR
 **Model Answer:**
 > *"In multi-tier modeling, row loss or double-counting frequently occurs due to faulty outer joins, unhandled returns, or missing date keys. To eliminate this, I established a formal reconciliation contract across Raw, Staging, Intermediate, Fact, and Mart tiers.
 > 
-> In [`sql/reconciliation/financial_reconciliation.sql`](file:///d:/Mushroom%20Analytics/sql/reconciliation/financial_reconciliation.sql), I run three simultaneous balance checks:
+> In [`sql/reconciliation/financial_reconciliation.sql`](../sql/reconciliation/financial_reconciliation.sql), I run three simultaneous balance checks:
 > - **Revenue Pipeline**: Raw Invoiced Net (\$9,754.77) minus Return Credit Refunds (\$76.66) equals Fact Final Recognized Revenue (\$7,913.10) equals Mart Recognized Revenue (\$7,913.10). Variance: $0.00.
 > - **Harvest Mass Balance**: Raw Accepted Fresh Weight (706.157 kg) equals Fact Harvest (706.157 kg) equals Mart Harvest (706.157 kg). Variance: 0.000 kg.
 > - **OPEX Pipeline**: Raw Expenses (\$12,437.78) equals Fact Expenses (\$12,437.78) equals Mart OPEX (\$12,437.78). Variance: $0.00.
@@ -172,7 +172,7 @@ flowchart LR
 
 ### Q7: "How does your CI/CD pipeline protect downstream reporting from corruption?"
 **Model Answer:**
-> *"Our CI/CD workflow in [`.github/workflows/data_pipeline.yml`](file:///d:/Mushroom%20Analytics/.github/workflows/data_pipeline.yml) acts as an automated quality gate on every pull request. It enforces a strict multi-layer defense:
+> *"Our CI/CD workflow in [`.github/workflows/data_pipeline.yml`](../.github/workflows/data_pipeline.yml) acts as an automated quality gate on every pull request. It enforces a strict multi-layer defense:
 > 
 > 1. **Unit Testing**: Pytest executes 5 unit tests validating that row fingerprinting is deterministic and that incremental loaders insert 0 duplicate rows.
 > 2. **Pre-Flight Ingestion**: Loads operational data into an ephemeral runner database.

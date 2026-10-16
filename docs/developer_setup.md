@@ -65,7 +65,7 @@ python scripts/run_pipeline.py
 
 ## 3. Master Pipeline Orchestrator CLI Reference
 
-The master CLI is located at [`scripts/run_pipeline.py`](file:///d:/Mushroom%20Analytics/scripts/run_pipeline.py). It manages the full lifecycle and provides granular execution switches:
+The master CLI is located at [`scripts/run_pipeline.py`](../scripts/run_pipeline.py). It manages the full lifecycle and provides granular execution switches:
 
 ```powershell
 # 1. Full Production Execution
@@ -97,7 +97,7 @@ python scripts/run_pipeline.py --json
 
 ## 4. dbt Transformation Development Workflow
 
-All dimensional transformations reside in [`dbt_project/`](file:///d:/Mushroom%20Analytics/dbt_project).
+All dimensional transformations reside in [`dbt_project/`](../dbt_project).
 
 ### Project Layout
 ```
@@ -149,14 +149,14 @@ To develop or update interactive Power BI dashboards:
 ### Direct File Import Pattern (Recommended)
 1. Launch **Power BI Desktop**.
 2. Select **Get Data** -> **Folder** or **CSV Text**.
-3. Point to [`powerbi/data/`](file:///d:/Mushroom%20Analytics/powerbi/data).
+3. Point to [`powerbi/data/`](../powerbi/data).
 4. Load the 18 pre-staged CSV files (7 dimensions, 6 facts, 5 reporting marts).
-5. Establish relationships matching the Star Schema defined in [`docs/dimensional_model.md`](file:///d:/Mushroom%20Analytics/docs/dimensional_model.md).
-6. Copy standard measures from the production DAX library: [`powerbi/dax_measures.dax`](file:///d:/Mushroom%20Analytics/powerbi/dax_measures.dax).
+5. Establish relationships matching the Star Schema defined in [`docs/dimensional_model.md`](dimensional_model.md).
+6. Copy standard measures from the production DAX library: [`powerbi/dax_measures.dax`](../powerbi/dax_measures.dax).
 
 ### Benefits of Staged CSV Pattern:
 - **Zero Lock Contention**: Power BI Desktop will not conflict with background DuckDB write transactions.
-- **Git Version Control**: All staged datasets are tracked with explicit schemas in [`tables_manifest.json`](file:///d:/Mushroom%20Analytics/powerbi/data/tables_manifest.json).
+- **Git Version Control**: All staged datasets are tracked with explicit schemas in [`tables_manifest.json`](../powerbi/data/tables_manifest.json).
 - **Fast Rendering**: Pre-aggregated marts load instantaneously into VertiPaq in-memory storage.
 
 ---
@@ -171,9 +171,9 @@ jupyter notebook notebooks/
 ```
 
 Available Notebooks:
-- [`notebooks/01_cultivation_and_yield_eda.ipynb`](file:///d:/Mushroom%20Analytics/notebooks/01_cultivation_and_yield_eda.ipynb): Biological efficiency distributions, One-Way ANOVA across varieties, incubation cycle analysis.
-- [`notebooks/02_sales_and_customer_eda.ipynb`](file:///d:/Mushroom%20Analytics/notebooks/02_sales_and_customer_eda.ipynb): Customer segment profitability, volume-discount correlation, Pareto LTV distribution.
-- [`notebooks/03_spoilage_and_operations_stats.ipynb`](file:///d:/Mushroom%20Analytics/notebooks/03_spoilage_and_operations_stats.ipynb): Cold storage shrinkage breakdown, flush yield decay curve, fixed overhead break-even modeling.
+- [`notebooks/01_cultivation_and_yield_eda.ipynb`](../notebooks/01_cultivation_and_yield_eda.ipynb): Biological efficiency distributions, One-Way ANOVA across varieties, incubation cycle analysis.
+- [`notebooks/02_sales_and_customer_eda.ipynb`](../notebooks/02_sales_and_customer_eda.ipynb): Customer segment profitability, volume-discount correlation, Pareto LTV distribution.
+- [`notebooks/03_spoilage_and_operations_stats.ipynb`](../notebooks/03_spoilage_and_operations_stats.ipynb): Cold storage shrinkage breakdown, flush yield decay curve, fixed overhead break-even modeling.
 
 To regenerate publication-grade figures programmatically:
 ```powershell

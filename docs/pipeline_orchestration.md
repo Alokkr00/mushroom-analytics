@@ -82,7 +82,7 @@ flowchart TD
 
 ## 4. CLI Execution Reference
 
-The pipeline orchestrator CLI is located at [`scripts/run_pipeline.py`](file:///d:/Mushroom%20Analytics/scripts/run_pipeline.py).
+The pipeline orchestrator CLI is located at [`scripts/run_pipeline.py`](../scripts/run_pipeline.py).
 
 ```powershell
 # 1. Full production execution (Ingest -> dbt Run -> dbt Test -> Reconcile -> Export -> Stats)
@@ -118,7 +118,7 @@ python scripts/run_pipeline.py --stage reconcile --no-alerts --json
 
 ## 5. Automated Alerting & Notification Architecture
 
-The alerting manager ([`orchestration/alerting.py`](file:///d:/Mushroom%20Analytics/orchestration/alerting.py)) implements an enterprise event payload generator supporting three major integration targets:
+The alerting manager ([`orchestration/alerting.py`](../orchestration/alerting.py)) implements an enterprise event payload generator supporting three major integration targets:
 
 ### A. Slack Block Kit Specification
 Formatted with semantic color attachments (`#2EB886` for Pass, `#E01E5A` for Critical Failure):
@@ -179,7 +179,7 @@ Includes structured `FactSet` elements for seamless embedding in Teams channels:
 
 ### C. Local Audit Trail Persistence
 To ensure forensic auditability even during network isolation or rate limiting:
-- Every alert generated is written to [`data/audit_logs/alerts/<timestamp>_<status>_<run_id>.json`](file:///d:/Mushroom%20Analytics/data/audit_logs/alerts).
+- Every alert generated is written to [`data/audit_logs/alerts/<timestamp>_<status>_<run_id>.json`](../data/audit_logs/alerts).
 - Contains metadata, full execution timings, payload representations, and local error traces.
 
 ---
@@ -223,7 +223,7 @@ def mycometrics_flow():
 
 ## 7. CI/CD Quality Gate (GitHub Actions)
 
-Located at [`.github/workflows/data_pipeline.yml`](file:///d:/Mushroom%20Analytics/.github/workflows/data_pipeline.yml).
+Located at [`.github/workflows/data_pipeline.yml`](../.github/workflows/data_pipeline.yml).
 - **Execution Matrix**: Triggered on every pull request and push to `main`.
 - **Quality Gates Enforced**:
   1. `pytest tests/unit/`: Validates SHA-256 fingerprinting and loader deduplication logic.

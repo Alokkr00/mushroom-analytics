@@ -48,7 +48,7 @@ If the ingestion pipeline is executed repeatedly against unchanged source CSVs, 
 
 ## 3. Automated Anomaly Logging & Quarantine Protocol
 
-Rather than silently dropping corrupt data or crashing ungracefully, the ingestion engine isolates anomalies into the [`audit.data_quality_issues`](file:///d:/Mushroom%20Analytics/sql/initialization/03_create_audit_tables.sql) table:
+Rather than silently dropping corrupt data or crashing ungracefully, the ingestion engine isolates anomalies into the [`audit.data_quality_issues`](../sql/initialization/03_create_audit_tables.sql) table:
 
 ```
 [Incoming Operational Row]

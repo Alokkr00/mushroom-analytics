@@ -11,7 +11,7 @@
 
 ### 1.1 Routine Daily Ingestion Verification
 Every day at 04:00 AM UTC, the automated pipeline refreshes the warehouse. The primary operational health checks are:
-1. Verify latest pipeline execution log in [`logs/pipeline_runs/`](file:///d:/Mushroom%20Analytics/logs/pipeline_runs).
+1. Verify latest pipeline execution log in [`logs/pipeline_runs/`](../logs/pipeline_runs).
 2. Check for zero entries in `audit.data_quality_issues` with severity `ERROR` or `CRITICAL`:
    ```sql
    SELECT issue_id, source_file, check_type, severity, issue_description, detected_at
@@ -65,7 +65,7 @@ flowchart TD
 3. Check header names against `sql/initialization/02_create_raw_tables.sql`.
 
 **Remediation Procedure:**
-1. If an optional column was omitted by the farm spreadsheet, update the loader schema map in [`ingestion/raw_loader.py`](file:///d:/Mushroom%20Analytics/ingestion/raw_loader.py) to provide default `None`/`np.nan`.
+1. If an optional column was omitted by the farm spreadsheet, update the loader schema map in [`ingestion/raw_loader.py`](../ingestion/raw_loader.py) to provide default `None`/`np.nan`.
 2. If column headers were misspelled (e.g. `cust_name` instead of `customer_name`), normalize the column in the staging loader.
 3. Validate locally:
    ```powershell
@@ -147,7 +147,7 @@ DuckDB is an embedded database that permits multiple concurrent readers, but req
    ```powershell
    Stop-Process -Name python -Force -ErrorAction SilentlyContinue
    ```
-3. In Power BI Desktop: Close the active session or change the Power BI data source from direct DuckDB connection to the staged CSV directory ([`powerbi/data/`](file:///d:/Mushroom%20Analytics/powerbi/data)), which is read-only and eliminates all lock contention.
+3. In Power BI Desktop: Close the active session or change the Power BI data source from direct DuckDB connection to the staged CSV directory ([`powerbi/data/`](../powerbi/data)), which is read-only and eliminates all lock contention.
 4. Retry the pipeline:
    ```powershell
    python scripts/run_pipeline.py --stage reconcile

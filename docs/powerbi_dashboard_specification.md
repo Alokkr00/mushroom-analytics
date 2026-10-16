@@ -254,7 +254,7 @@ The reporting suite consists of four specialized analytical dashboards providing
    - Confirm active `*:1` relationships match the table in Section 1.1.
 4. **Create Measure Table**:
    - Click **Enter Data** $\rightarrow$ Name table `_Measures`.
-   - Copy and paste the DAX definitions from [`powerbi/dax_measures.dax`](file:///d:/Mushroom%20Analytics/powerbi/dax_measures.dax).
+   - Copy and paste the DAX definitions from [`powerbi/dax_measures.dax`](../powerbi/dax_measures.dax).
    - Assign measures to their designated Display Folders (`01_Sales_and_Revenue`, etc.).
 5. **Configure Canvases**:
    - Set Page size to **16:9** (1280 x 720).
@@ -265,7 +265,7 @@ The reporting suite consists of four specialized analytical dashboards providing
 
 ## 5. Summary Deliverables
 
-- Production DAX Library: [`powerbi/dax_measures.dax`](file:///d:/Mushroom%20Analytics/powerbi/dax_measures.dax) (30+ production measures).
-- Power BI Staged Data: [`powerbi/data/`](file:///d:/Mushroom%20Analytics/powerbi/data) (18 conformed tables).
-- Power BI Tables Manifest: [`powerbi/data/tables_manifest.json`](file:///d:/Mushroom%20Analytics/powerbi/data/tables_manifest.json).
-- Comprehensive Architecture Spec: [`docs/powerbi_dashboard_specification.md`](file:///d:/Mushroom%20Analytics/docs/powerbi_dashboard_specification.md).
+- Production DAX Library: [`powerbi/dax_measures.dax`](../powerbi/dax_measures.dax) (30+ production measures).
+- Power BI Staged Data: [`powerbi/data/`](../powerbi/data) (18 conformed tables).
+- Power BI Tables Manifest: [`powerbi/data/tables_manifest.json`](../powerbi/data/tables_manifest.json).
+- Comprehensive Architecture Spec: [`docs/powerbi_dashboard_specification.md`](powerbi_dashboard_specification.md).
