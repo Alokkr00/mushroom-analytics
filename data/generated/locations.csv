@@ -1,0 +1,6 @@
+"location_id","name","capacity_blocks","temp_controlled","source_type","created_at"
+"LOC-01","Grow Room A",200,True,"synthetic_demo","2024-05-01T00:00:00Z"
+"LOC-02","Grow Room B",200,True,"synthetic_demo","2024-05-01T00:00:00Z"
+"LOC-03","Incubation Darkroom",400,True,"synthetic_demo","2024-05-01T00:00:00Z"
+"LOC-04","Walk-in Chiller",0,True,"synthetic_demo","2024-05-01T00:00:00Z"
+"LOC-05","Substrate Prep Area",0,False,"synthetic_demo","2024-05-01T00:00:00Z"

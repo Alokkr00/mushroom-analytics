@@ -1,0 +1,17 @@
+mycometrics:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "../data/warehouse.duckdb"
+      schema: analytics
+      threads: 4
+    postgres:
+      type: postgres
+      host: "{{ env_var('DB_HOST', 'localhost') }}"
+      user: "{{ env_var('DB_USER', 'postgres') }}"
+      password: "{{ env_var('DB_PASSWORD', 'postgres') }}"
+      port: "{{ env_var('DB_PORT', '5432') | int }}"
+      dbname: "{{ env_var('DB_NAME', 'mycometrics') }}"
+      schema: analytics
+      threads: 4

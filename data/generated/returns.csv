@@ -1,0 +1,4 @@
+"return_id","original_order_line_id","original_order_id","product_id","mushroom_id","lot_id","return_date","return_type","return_kg","credit_value","reason","disposition","source_type","created_at"
+"RET-00001","LIN-00054","ORD-00040","PRD-001","MSH-01","LOT-00022","2024-08-05","CUSTOMER_RETURN",0.284,4.54,"Damaged packaging on arrival","Discarded - perishable goods","synthetic_demo","2024-08-05T00:00:00Z"
+"RET-00002","LIN-00081","ORD-00058","PRD-009","MSH-03","LOT-00034","2024-10-02","CUSTOMER_RETURN",2.637,63.29,"Excess order - customer over-ordered","Discarded - perishable goods","synthetic_demo","2024-10-02T00:00:00Z"
+"RET-00003","LIN-00083","ORD-00060","PRD-001","MSH-01","LOT-00037","2024-10-01","CUSTOMER_RETURN",0.552,8.83,"Excess order - customer over-ordered","Discarded - perishable goods","synthetic_demo","2024-10-01T00:00:00Z"

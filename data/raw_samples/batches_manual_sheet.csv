@@ -1,0 +1,6 @@
+batch_id,mushroom_variety,substrate_type,substrate_kg,spawn_kg,batch_start_date,room_id,target_yield_kg,status,notes
+BAT-00001,Pearl Oyster,Pasteurized Wheat Straw + Wheat Bran,45.0,4.5,2024-05-02,LOC-01,40.0,COMPLETED,Normal incubation run
+BAT-00002,Pearl Oyster,Pasteurized Wheat Straw + Wheat Bran,50.0,5.0,2024-05-08,LOC-01,45.0,COMPLETED,Flush 1 vigorous
+BAT-00003,Lion's Mane,Supplemented Hardwood Sawdust,35.0,3.5,2024-05-15,LOC-02,25.0,COMPLETED,Master's mix test batch
+BAT-00004,Pearl Oyster,Pasteurized Wheat Straw + Wheat Bran,40.0,4.0,2024-05-22,LOC-01,36.0,CONTAMINATED,Trichoderma green mould detected - discarded
+BAT-00005,Shiitake,Sterilized Hardwood Sawdust,30.0,3.0,2024-05-29,LOC-02,18.0,IN_PROGRESS,Incubation stage in darkroom

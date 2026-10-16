@@ -1,0 +1,110 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw operational source tables for FungiFlow Organics"
+    schema: raw
+    tables:
+      - name: raw_mushroom_varieties
+        description: "Botanical parameters, incubation cycles, and target biological efficiency."
+        columns:
+          - name: mushroom_id
+            tests:
+              - unique
+              - not_null
+      - name: raw_locations
+        description: "Facility growing rooms and storage units."
+        columns:
+          - name: location_id
+            tests:
+              - unique
+              - not_null
+      - name: raw_expense_categories
+        description: "Chart-of-accounts expense classifications."
+        columns:
+          - name: category_id
+            tests:
+              - unique
+              - not_null
+      - name: raw_products
+        description: "Sellable finished goods SKUs."
+        columns:
+          - name: product_id
+            tests:
+              - unique
+              - not_null
+      - name: raw_suppliers
+        description: "Vendors and material lead times."
+        columns:
+          - name: supplier_id
+            tests:
+              - unique
+              - not_null
+      - name: raw_customers
+        description: "B2B and B2C customer accounts."
+        columns:
+          - name: customer_id
+            tests:
+              - unique
+              - not_null
+      - name: raw_production_batches
+        description: "Substrate formulations, inoculation events, and target yields."
+        columns:
+          - name: batch_id
+            tests:
+              - unique
+              - not_null
+      - name: raw_harvest_records
+        description: "Flush picking weights (gross, accepted, rejected) and labor hours."
+        columns:
+          - name: harvest_id
+            tests:
+              - unique
+              - not_null
+      - name: raw_inventory_movements
+        description: "Signed inventory stock movements (HARVEST_IN, SALE_OUT, WASTE_OUT)."
+        columns:
+          - name: movement_id
+            tests:
+              - unique
+              - not_null
+      - name: raw_sales_orders
+        description: "Inbound commercial orders, channels, booking and delivery dates."
+        columns:
+          - name: order_id
+            tests:
+              - unique
+              - not_null
+      - name: raw_sales_order_lines
+        description: "Line-item quantities, prices, volume discounts, and realized revenues."
+        columns:
+          - name: order_line_id
+            tests:
+              - unique
+              - not_null
+      - name: raw_expenses
+        description: "Operating expenditures and utility payments."
+        columns:
+          - name: expense_id
+            tests:
+              - unique
+              - not_null
+      - name: raw_purchases
+        description: "Material purchase orders and vendor receipts."
+        columns:
+          - name: purchase_id
+            description: "Purchase receipt ID (note: contains controlled duplicates in raw for DQ test)"
+      - name: raw_waste_events
+        description: "Cold-storage spoilage and disposal events."
+        columns:
+          - name: waste_id
+            tests:
+              - unique
+              - not_null
+      - name: raw_returns
+        description: "Customer returns and credit memos for degraded deliveries."
+        columns:
+          - name: return_id
+            tests:
+              - unique
+              - not_null

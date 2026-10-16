@@ -1,0 +1,286 @@
+{
+  "generated_at": "2026-10-16T03:51:03.719997Z",
+  "scale": "small",
+  "seed": 42,
+  "period_start": "2024-05-01",
+  "period_end": "2024-10-28",
+  "files": {
+    "mushroom_varieties": {
+      "filename": "mushroom_varieties.csv",
+      "row_count": 3,
+      "columns": [
+        "mushroom_id",
+        "common_name",
+        "scientific_name",
+        "substrate_formula",
+        "incubation_days_min",
+        "incubation_days_max",
+        "days_to_flush1_min",
+        "days_to_flush1_max",
+        "days_between_flushes_min",
+        "days_between_flushes_max",
+        "be_min",
+        "be_max",
+        "flush1_share_min",
+        "flush1_share_max",
+        "shelf_life_days",
+        "rejection_rate_normal_min",
+        "rejection_rate_normal_max",
+        "rejection_rate_stress_min",
+        "rejection_rate_stress_max",
+        "spawn_rate",
+        "contamination_rate",
+        "introduced_month_offset",
+        "source_type",
+        "created_at"
+      ]
+    },
+    "locations": {
+      "filename": "locations.csv",
+      "row_count": 5,
+      "columns": [
+        "location_id",
+        "name",
+        "capacity_blocks",
+        "temp_controlled",
+        "source_type",
+        "created_at"
+      ]
+    },
+    "expense_categories": {
+      "filename": "expense_categories.csv",
+      "row_count": 14,
+      "columns": [
+        "category_id",
+        "name",
+        "behavior",
+        "fs_section",
+        "source_type",
+        "created_at"
+      ]
+    },
+    "products": {
+      "filename": "products.csv",
+      "row_count": 13,
+      "columns": [
+        "product_id",
+        "mushroom_id",
+        "sku_code",
+        "product_name",
+        "package_format",
+        "unit_weight_kg",
+        "grade",
+        "standard_selling_price",
+        "active_status",
+        "source_type",
+        "created_at"
+      ]
+    },
+    "suppliers": {
+      "filename": "suppliers.csv",
+      "row_count": 10,
+      "columns": [
+        "supplier_id",
+        "name",
+        "category",
+        "lead_days_min",
+        "lead_days_max",
+        "payment_terms",
+        "source_type",
+        "created_at"
+      ]
+    },
+    "customers": {
+      "filename": "customers.csv",
+      "row_count": 20,
+      "columns": [
+        "customer_id",
+        "customer_name",
+        "customer_segment",
+        "delivery_route_zone",
+        "payment_terms_days",
+        "preferred_variety",
+        "acquisition_date",
+        "is_active",
+        "source_type",
+        "created_at"
+      ]
+    },
+    "production_batches": {
+      "filename": "production_batches.csv",
+      "row_count": 32,
+      "columns": [
+        "batch_id",
+        "mushroom_id",
+        "mushroom_variety",
+        "substrate_formula",
+        "planned_blocks_count",
+        "dry_substrate_kg",
+        "water_liters_added",
+        "spawn_kg",
+        "batch_start_date",
+        "transfer_to_fruiting_date",
+        "growing_room_id",
+        "expected_first_harvest_date",
+        "target_yield_kg",
+        "direct_material_cost",
+        "batch_status",
+        "is_stress_event",
+        "notes",
+        "source_type",
+        "created_at"
+      ]
+    },
+    "harvest_records": {
+      "filename": "harvest_records.csv",
+      "row_count": 46,
+      "columns": [
+        "harvest_id",
+        "batch_id",
+        "harvest_date",
+        "flush_number",
+        "gross_harvested_kg",
+        "accepted_weight_kg",
+        "rejected_weight_kg",
+        "rejection_reason",
+        "labor_hours",
+        "source_type",
+        "recorded_at"
+      ]
+    },
+    "inventory_movements": {
+      "filename": "inventory_movements.csv",
+      "row_count": 176,
+      "columns": [
+        "movement_id",
+        "lot_id",
+        "product_id",
+        "mushroom_id",
+        "batch_id",
+        "harvest_id",
+        "movement_date",
+        "movement_type",
+        "signed_quantity_kg",
+        "unit_cost",
+        "total_movement_value",
+        "expiry_date",
+        "reason",
+        "reference_transaction_id",
+        "source_type",
+        "created_at"
+      ]
+    },
+    "sales_orders": {
+      "filename": "sales_orders.csv",
+      "row_count": 75,
+      "columns": [
+        "order_id",
+        "customer_id",
+        "order_date",
+        "requested_delivery_date",
+        "actual_delivery_date",
+        "order_status",
+        "payment_status",
+        "sales_channel",
+        "source_type",
+        "created_at"
+      ]
+    },
+    "sales_order_lines": {
+      "filename": "sales_order_lines.csv",
+      "row_count": 113,
+      "columns": [
+        "order_line_id",
+        "order_id",
+        "product_id",
+        "mushroom_id",
+        "lot_id",
+        "quantity_ordered_kg",
+        "quantity_fulfilled_kg",
+        "unit_of_measure",
+        "unit_selling_price",
+        "discount_amount",
+        "gross_revenue",
+        "net_revenue",
+        "source_type",
+        "created_at"
+      ]
+    },
+    "expenses": {
+      "filename": "expenses.csv",
+      "row_count": 51,
+      "columns": [
+        "expense_id",
+        "expense_date",
+        "expense_category_id",
+        "description",
+        "amount",
+        "currency",
+        "supplier_id",
+        "batch_id",
+        "allocation_method",
+        "source_type",
+        "created_at"
+      ]
+    },
+    "purchases": {
+      "filename": "purchases.csv",
+      "row_count": 37,
+      "columns": [
+        "purchase_id",
+        "supplier_id",
+        "purchase_date",
+        "material_name",
+        "unit_of_measure",
+        "quantity_ordered",
+        "quantity_received",
+        "unit_price",
+        "total_cost",
+        "delivery_date",
+        "payment_status",
+        "source_type",
+        "created_at"
+      ]
+    },
+    "waste_events": {
+      "filename": "waste_events.csv",
+      "row_count": 16,
+      "columns": [
+        "waste_id",
+        "lot_id",
+        "product_id",
+        "mushroom_id",
+        "batch_id",
+        "waste_date",
+        "waste_type",
+        "waste_kg",
+        "estimated_unit_cost",
+        "estimated_waste_value",
+        "reason_code",
+        "disposition",
+        "source_type",
+        "created_at"
+      ]
+    },
+    "returns": {
+      "filename": "returns.csv",
+      "row_count": 3,
+      "columns": [
+        "return_id",
+        "original_order_line_id",
+        "original_order_id",
+        "product_id",
+        "mushroom_id",
+        "lot_id",
+        "return_date",
+        "return_type",
+        "return_kg",
+        "credit_value",
+        "reason",
+        "disposition",
+        "source_type",
+        "created_at"
+      ]
+    }
+  }
+}
